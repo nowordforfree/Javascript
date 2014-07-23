@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>horse</title>
+	<style type="text/css">
+	#Header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		text-align: center;
+		color: white;
+		background-color: black;
+		margin-bottom: 20px;
+	}
+	.Horse {
+		display: inline-block;
+		border: 1px solid white;
+		text-align: center;
+		color: white;
+		background-color: black;
+	}
+	#container {
+		position: absolute;
+		left: 0;
+		margin-top: 90px;
+		width: 100%;
+	}
+	.Run {
+		display: inline-block;
+		width: 75px;
+		cursor: pointer;
+		border: 1px solid white;
+		text-align: center;
+		color: white;
+		background-color: black;
+	}
+	::-webkit-input-placeholder {
+		font-style: italic;
+	}
+	:-moz-placeholder {
+		font-style: italic;
+	}
+	:-ms-input-placeholder {
+		font-style: italic;
+	}
+	img {
+		width: 250px;
+		height: 200px;
+	}
+	</style>
+</head>
+<body>
+<div id="wrapper">
+	<div id="Header">
+		<h3>Enter horse name:</h3>
+		<input type="text" id="hname" placeholder="Type horse name here"><div class="Run" onclick="NewHorse()">Create</div>
+	</div>
+	<div id="container"></div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+	function NewHorse() {
+		var name = document.getElementById('hname').value;
+		var name = new Horse(name);
+
+	}
+	
+    function Horse(horseID) {
+
+		var Horse = document.createElement('div');
+		document.getElementById('container').appendChild(Horse);
+		Horse.className = 'Horse';
+		Horse.innerHTML = "<br><img src='img/horse.jpg'>";
+		var Distance = document.createElement('input');
+		Horse.insertBefore(Distance, Horse.getElementsByTagName('br')[0]);
+		Distance.type = 'text';
+		var RunTrigger = document.createElement('div');
+		Horse.insertBefore(RunTrigger, Horse.getElementsByTagName('br')[0]);
+		RunTrigger.innerHTML = 'Run';
+		RunTrigger.className = 'Run';
+
+		RunTrigger.onclick = function() {
+			if (isNaN(Number(this.parentNode.firstChild.value)) || Number(this.parentNode.firstChild.value) <= 0)
+				alert("Invalid number!");
+			else {
+				this.parentNode.firstChild.setAttribute('disabled', 'disabled');
+				Run(this.parentNode.firstChild);
+			}
+		};
+
+		function Run(Distance) {
+			if (typeof(Distance.parentNode) != 'undefined')	{
+				var exhausted = 0;
+				var timer = setInterval(function() {
+					 if (Distance.value > 0) {
+						if (Distance.parentNode.lastChild.src.indexOf('img/horse.gif') === -1)
+							Distance.parentNode.lastChild.src = 'img/horse.gif';
+					 	Distance.value--;
+					 	exhausted++;
+					 	if (exhausted === 10) {
+						 	clearInterval(timer);
+						 	Rest(Distance);
+					 	}
+					}
+					 else {
+					 	clearInterval(timer);
+						Distance.removeAttribute('disabled');
+					 	Distance.parentNode.lastChild.src = 'img/horse.jpg';
+					};
+				}, 333);
+			}
+		};
+
+		function Rest (Distance) {
+			Distance.parentNode.lastChild.src = 'img/horse-rest.gif';
+			setTimeout(Run(Distance), 1000);
+			// Run(Distance);
+		};
+
+	};
+
+</script>

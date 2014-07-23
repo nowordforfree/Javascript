@@ -1,0 +1,403 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>table</title>
+    <script type="text/javascript" src="main.js"></script>
+    <style type="text/css">
+        .table1 {
+            table-layout: fixed;
+            border-collapse: collapse;
+            text-align: center;
+            width: 100%;
+        }
+
+            .table1 th {
+                background-color: #ffd800;
+                border: 3px solid black;
+            }
+
+            .table1 td {
+                border: 1px solid black;
+                padding: 2px;
+                overflow: hidden;
+            }
+
+        #init {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 21px;
+            border: 1px solid black;
+        }
+        #init input {
+            border: none;
+        }
+        #init input[type="text"] {
+            width: 98px;
+        }
+        #init input[type="button"] {
+            width: 50px;
+        }
+
+        #bax {
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+            #bax .head td {
+                font: bold 16px "Calibri Light";
+                background-color: #81c5ff;
+            }
+
+            #bax td {
+                font-size: 12px;
+                font-family: Calibri;
+                border: 1px solid black;
+            }
+    </style>
+</head>
+<body>
+    <div id="init">
+        <input type="text" onkeydown="if (event.keyCode == 13) { TableTool.Init(this.value); return false; }" /><input type="button" value="init" onclick="TableTool.Init(this.parentNode.children[0].value)" />
+    </div>
+    <table id="bax">
+        <tr class="head">
+            <td>Date</td>
+            <td>Batch ID</td>
+            <td>Item link</td>
+            <td>Item Type</td>
+            <td>Response</td>
+            <td>Details</td>
+        </tr>
+        <tr>
+            <td>1st row</td>
+            <td>100301</td>
+            <td>first row third td</td>
+            <td>Payment Method</td>
+            <td>No</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td rowspan="4">07/08/14</td>
+            <td>100303</td>
+            <td><a href="http://baxter41test.r2ss.net/Pages/ViewAPITracking.aspx?ID=303&Source=/Pages/Home.aspx">http://baxter41test.r2ss.net/Pages/ViewAPITracking.aspx?ID=303&Source=/Pages/Home.aspx</a></td>
+            <td>Payment Method</td>
+            <td>No</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td>100304</td>
+            <td><a href="http://baxter41test.r2ss.net/Pages/ViewAPITracking.aspx?ID=304&Source=/Pages/Home.aspx">http://baxter41test.r2ss.net/Pages/ViewAPITracking.aspx?ID=304&Source=/Pages/Home.aspx</a></td>
+            <td>Payment Method</td>
+            <td>No</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <td>100310</td>
+            <td><a href="http://baxter41test.r2ss.net/Pages/ViewAPITracking.aspx?ID=310&Source=/Pages/Home.aspx">http://baxter41test.r2ss.net/Pages/ViewAPITracking.aspx?ID=310&Source=/Pages/Home.aspx</a></td>
+            <td>Payment Request</td>
+            <td>No</td>
+            <td>4</td>
+        </tr>
+        <tr>
+            <td>100311</td>
+            <td><a href="http://baxter41test.r2ss.net/Pages/ViewAPITracking.aspx?ID=311&Source=/Pages/Home.aspx">http://baxter41test.r2ss.net/Pages/ViewAPITracking.aspx?ID=311&Source=/Pages/Home.aspx</a></td>
+            <td>Payment Request</td>
+            <td>No</td>
+            <td>5</td>
+        </tr>
+        <tr>
+            <td>row 6</td>
+            <td>100306</td>
+            <td>6</td>
+            <td>Payment Method</td>
+            <td>Yes</td>
+            <td>6</td>
+        </tr>
+    </table>
+    <br />
+    <table class="table1" id="first">
+        <thead>
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>C</th>
+                <th>D</th>
+                <th>E</th>
+                <th>F</th>
+                <th>G</th>
+                <th>H</th>
+                <th>I</th>
+                <th>J</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>A1</td>
+                <td>B1</td>
+                <td>C1</td>
+                <td>1</td>
+                <td>Ea</td>
+                <td>F1</td>
+                <td>g</td>
+                <td>h</td>
+                <td>I1</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A2</td>
+                <td>B2</td>
+                <td>C2</td>
+                <td>2</td>
+                <td>Eb</td>
+                <td>F2</td>
+                <td>gg</td>
+                <td>h0</td>
+                <td>I2</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A3</td>
+                <td>B3</td>
+                <td>C3</td>
+                <td>3</td>
+                <td>Ec</td>
+                <td>F3</td>
+                <td>ggg</td>
+                <td>h+h</td>
+                <td>I3</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A4</td>
+                <td>B4</td>
+                <td>C4</td>
+                <td>4</td>
+                <td>Ed</td>
+                <td>F4</td>
+                <td>gggg</td>
+                <td>h+h+h</td>
+                <td>I4</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A5</td>
+                <td>B5</td>
+                <td>C5</td>
+                <td>5</td>
+                <td>Ee</td>
+                <td>F5</td>
+                <td>ggggg</td>
+                <td>h5</td>
+                <td>I5</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A6</td>
+                <td>B6</td>
+                <td>C6</td>
+                <td>6</td>
+                <td>Ef</td>
+                <td>F6</td>
+                <td>gggggg</td>
+                <td>h6</td>
+                <td>I6</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A7</td>
+                <td>B7</td>
+                <td>C7</td>
+                <td>7</td>
+                <td>Eg</td>
+                <td>F7</td>
+                <td>ggggggg</td>
+                <td>h7</td>
+                <td>I7</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A8</td>
+                <td>B8</td>
+                <td>C8</td>
+                <td>8</td>
+                <td>Eh</td>
+                <td>F8</td>
+                <td>gggggggg</td>
+                <td>h8</td>
+                <td>I8</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A9</td>
+                <td>B9</td>
+                <td>C9</td>
+                <td>9</td>
+                <td>Ei</td>
+                <td>F9</td>
+                <td>ggggggggg</td>
+                <td>h9</td>
+                <td>I9</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A10</td>
+                <td>B10</td>
+                <td>C10</td>
+                <td>10</td>
+                <td>Ej</td>
+                <td>F10</td>
+                <td>gggggggggg</td>
+                <td>h*</td>
+                <td>I10</td>
+                <td>J1</td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <table id="second">
+        <thead>
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>C</th>
+                <th>D</th>
+                <th>E</th>
+                <th>F</th>
+                <th>G</th>
+                <th>H</th>
+                <th>I</th>
+                <th>J</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>A1</td>
+                <td>B1</td>
+                <td>C1</td>
+                <td>1</td>
+                <td>Ea</td>
+                <td>F1</td>
+                <td>g</td>
+                <td>h</td>
+                <td>I1</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A2</td>
+                <td>B2</td>
+                <td>C2</td>
+                <td>2</td>
+                <td>Eb</td>
+                <td>F2</td>
+                <td>gg7</td>
+                <td>h0</td>
+                <td>I2</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A3</td>
+                <td>B3</td>
+                <td>C3</td>
+                <td>3</td>
+                <td>Ec</td>
+                <td>F3</td>
+                <td>ggg7</td>
+                <td>h+h</td>
+                <td>I3</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A4</td>
+                <td>B4</td>
+                <td>C4</td>
+                <td>4</td>
+                <td>Ed</td>
+                <td>F4</td>
+                <td>gggg777</td>
+                <td>h+h+h</td>
+                <td>I4</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A5</td>
+                <td>B5</td>
+                <td>C5</td>
+                <td>5</td>
+                <td>Ee</td>
+                <td>F5</td>
+                <td>ggggg77</td>
+                <td>h5</td>
+                <td>I5</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A6</td>
+                <td>B6</td>
+                <td>C6</td>
+                <td>6</td>
+                <td>Ef</td>
+                <td>F6</td>
+                <td>gggggg77</td>
+                <td>h6</td>
+                <td>I6</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A7</td>
+                <td>B7</td>
+                <td>C7</td>
+                <td>7</td>
+                <td>Eg</td>
+                <td>F7</td>
+                <td>aaaggggggg7777</td>
+                <td>h7</td>
+                <td>I7</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A8</td>
+                <td>B8</td>
+                <td>C8</td>
+                <td>8</td>
+                <td>Eh</td>
+                <td>F8</td>
+                <td>111gggggggg777</td>
+                <td>h8</td>
+                <td>I8</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A9</td>
+                <td>B9</td>
+                <td>C9</td>
+                <td>9</td>
+                <td>Ei</td>
+                <td>F9</td>
+                <td>ggggggggg</td>
+                <td>h9</td>
+                <td>I9</td>
+                <td>J1</td>
+            </tr>
+            <tr>
+                <td>A10</td>
+                <td>B10</td>
+                <td>C10</td>
+                <td>10</td>
+                <td>Ej</td>
+                <td>F10</td>
+                <td>gggggggggg</td>
+                <td>h*</td>
+                <td>I10</td>
+                <td>J1</td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <table id="four"><tr></tr></table>
+</body>
+</html>

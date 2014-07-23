@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>drag and drop</title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+        #drag {
+            border: 1px solid black;
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        span {
+            border: 1px solid black;
+            padding: 5px;
+            cursor: pointer;
+        }
+        #drop {
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px solid black;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body onload="DragElem.makeDraggable(document.getElementById('drag'))">
+<!--<body onload="LogPosition()">-->
+    <div id="drag" >Drag Me!</div>
+    <div id="drop">Drop here</div>
+    <script type="text/javascript">
+
+        var DragElem = (function () {
+
+            var prevPosition;
+            var DragObj;
+
+            function DragColumn(e) {
+                if (e.which != 1) return;
+                DragObj = e.target;
+                prevPosition = {
+                    x: e.offsetX === undefined ? e.clientX - e.target.offsetLeft : e.offsetX,
+                    //y: DragObj.getBoundingClientRect().top
+                    y: e.offsetY === undefined ? e.clientY - e.target.offsetTop : e.offsetY
+                };
+                addDocumentEventHandlers();
+            }
+
+            function mouseUp() {
+                removeDocumentEventHandlers();
+            }
+
+            function addDocumentEventHandlers() {
+                document.onmousemove = mouseMove;
+                document.onmouseup = mouseUp;
+                //document.getElementById('drop').addEventListener('dragover', function (e) {
+                //    e.preventDefault();
+                //    e.dataTransfer.dropEffect = 'move';
+                //    this.style.backgroundColor = 'yellow';
+                //}, false);
+                //document.getElementById('drop').addEventListener('drop', function (e) {
+                //    if (e.stopPropagation) e.stopPropagation();
+                //    this.textContent = "Element with id = '" + e.dataTransfer.getData('text') + "' was dropped here";
+                //}, false);
+                document.ondragstart = document.body.onselectstart = function () { return false };
+            }
+
+            function removeDocumentEventHandlers() {
+                document.onmousemove = document.onmouseup = document.ondragstart = document.body.onselectstart = null;
+            }
+
+            function mouseMove(e) {
+                DragObj.style.position = 'absolute';
+                DragObj.style.zIndex = '1';
+                //DragObj.style.top = prevPosition.y + 'px';
+                DragObj.style.top = e.pageY - prevPosition.y + 'px';
+                DragObj.style.left = e.pageX - prevPosition.x + 'px';
+
+            }
+
+            return {
+                makeDraggable: function (elem) {
+                    elem.onmousedown = DragColumn;
+                }
+            }
+        }());
+
+    </script>
+</body>
+</html>
