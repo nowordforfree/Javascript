@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>learn query</title>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			$("#request input[type='button']").click(function () {
+				$.ajax({
+					url: "http://api.nestoria.co.uk/api?country=uk&pretty=1&action=search_listings&encoding=json&listing_type=buy&page=1&place_name="+$("#request input[type='text']")[0].value,
+					crossDomain: true,
+					dataType: 'jsonp',
+					data: null,
+					success: function( data ) {
+						$("body").append($("<div></div>").attr("id", "response"));
+						$(data.response.listings).each(function (i) {
+							var d = $("<div></div>").attr("id", i);
+							var props = Object.getOwnPropertyNames(data.response.listings[i])
+							$(props).each(function (p) {
+								if (props[p] == 'img_height') {
+									var img = $("<img>", {
+										src: data.response.listings[i][props[p + 1]],
+										css: {
+											height: data.response.listings[i][props[p]] + 'px',
+											width: data.response.listings[i][props[p + 2]] + 'px',
+											float: 'right'
+										}
+									})
+									d.prepend(img);
+									p += 3;
+								}
+								if (props[p] == 'lister_name') {
+									var ss = $("<li></li>").append("<b> Lister : </b>");
+									ss.append($("<a/>", {
+										text: data.response.listings[i][props[p]],
+										href: data.response.listings[i][props[p + 1]]
+									}));
+									d.prepend( ss[0] );
+								}
+								if (props[p] == 'title') {
+									var t = $("<div/>", {
+										class: 'Title'
+									}).text(data.response.listings[i][props[p]]);
+									d.prepend(t);
+								}
+								else {
+									d.append( "<li>" + "<b>" + props[p].replace('_', ' ') + "</b>" + ': ' + data.response.listings[i][props[p]] + "</li>" );
+								}
+							})
+							$("#response").append(d);
+						})
+					}
+				});
+			})
+		})
+	</script>
+	<style type="text/css">
+	#request {
+		display: inline-block;
+		width: 250px;
+		border: 1px solid black;
+		margin: 10px 0;
+	}
+	#request input {
+		height: 100%;
+		border: 0;
+	}
+	#request input[type='text'] {
+		width: 78%;
+		border: 0;
+	}
+	#request input[type='button'] {
+		width: 20%;
+	}
+	#response {
+		border: 1px solid black;
+	}
+	#response div {
+		border: 1px solid black;
+		padding: 5px;
+	}
+	#response .Title {
+		font: 18px/20px bold "Times New Roman", Verdana, Arial;
+		text-align: center;
+		border: 0;
+	}
+	#response li {
+		list-style: none;
+	}
+	</style>
+</head>
+<body>
+<div id="request">
+	<input type="text"><input type="button" value="Send">
+</div>
+</body>
+</html>

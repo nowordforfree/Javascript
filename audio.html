@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>audio</title>
+	<style type="text/css">
+	body {
+		background-color: darkgrey;
+	}
+	.file_upload {
+		display: block;
+	    position: relative;
+	    overflow: hidden;
+	    font-size: 1em;
+	    height: 2em;
+	    line-height: 2em;
+		border: 1px solid #ccc;
+	    border-radius: 3px;
+	    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+	    transition: box-shadow 0.1s linear;
+	    margin-bottom: 10px;
+	}
+	.file_upload input[type=file] {
+		position: absolute;
+		top: 0;
+		visibility: hidden;
+	}
+	.file_upload.focus {
+		box-shadow: 0 0 5px rgba(0,30,255,0.4)
+	}
+	.file_upload > button {
+		box-sizing: border-box;
+	    -moz-box-sizing: border-box;
+	    width: 100%;
+	    height: 100%;
+	    text-align: center; 
+		background: #7300df;
+	    transition: background 0.2s;
+	    border: 1px solid rgba(0,0,0,0.1);
+	    border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+	    border-radius: 2px;
+	    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+	    color: #fff;
+	    text-shadow: #6200bd 0 -1px 0;
+	    overflow: hidden;
+	    white-space: nowrap;
+	    text-overflow: ellipsis;
+	}
+	.file_upload:hover > button {
+	    background: #6200bd;
+	    text-shadow: #5d00b3 0 -1px 0;
+	}
+	.file_upload:active > button {
+	    background: #5d00b3;
+	    box-shadow: 0 0 3px rgba(0,0,0,0.3) inset;
+	}
+	#player {
+		width: 100%;
+	}
+	#playlist {
+		border: 2px solid black;
+		min-height: 20px;
+		padding-left: 10px;
+		background-color: white;
+	}
+	#playlist > span {
+		font: 14px/15px Verdana, arial, sans-serif;
+	}
+	#playlist div {
+		cursor: pointer;
+	}
+	#playlist div:hover {
+		background: rgba(255, 180, 50, 0.5);
+	}
+	.playing {
+		background: rgba(255, 250, 105, 0.7);	
+	}
+	</style>
+</head>
+<body>
+<audio controls id="player"></audio>
+<div class="file_upload">
+	<button type="button" onclick="document.getElementById('plfile').click()">Add file</button>
+	<input type="file" id="plfile" accept="audio" multiple>
+</div>
+<div id="playlist">Playlist is empty : (</div>
+</body>
+</html>
+
+<script language="javascript">
+var plfile = document.getElementById('plfile');
+var playlist = document.getElementById('playlist');
+var player = document.getElementById('player');
+var files = [];
+player.setAttribute('autoplay', 'true');
+playlist.setAttribute('blank', 'true');
+
+
+var freader = new FileReader();
+
+freader.onload = function(e) {
+	player.src = e.target.result;
+	player.load();
+}
+
+plfile.onchange = function(e) {
+	if (playlist.hasAttribute('blank')) {
+		playlist.removeAttribute('blank');
+		playlist.innerText = '';
+	}
+	for (var i = 0; i < e.target.files.length; i++) {
+		files.push(e.target.files[i]);
+		var track = document.createElement('div');
+		playlist.appendChild(track);
+		track.setAttribute('trackNo', playlist.children.length);
+		track.innerHTML = playlist.children.length+"	-	"+e.target.files[i].name;
+		track.onclick = function () {
+			if (playlist.getElementsByClassName('playing')[0])
+				playlist.getElementsByClassName('playing')[0].removeAttribute('class');
+			this.className = "playing";
+			freader.readAsDataURL(files[this.getAttribute('trackNo')-1]);
+		}
+	};	
+};
+
+player.addEventListener('ended', function() {
+	if (playlist.children.length > 1 && playlist.children.length > playlist.getElementsByClassName('playing')[0].getAttribute('trackno'))
+		freader.readAsDataURL(files[playlist.getElementsByClassName('playing')[0].getAttribute('trackno')]);
+})
+
+</script>

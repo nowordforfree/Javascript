@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Light</title>
+	<style type="text/css">
+		#wrapper {
+			width: 800px;
+			margin: 0 auto;
+		}
+		.red {
+			background: red;
+		}
+		.yellow {
+			background: yellow;
+		}
+		.green {
+			background: green;
+		}
+		.off {
+			background: silver;
+		}
+		.light {
+			display: inline-block;
+			border: 1px solid #ddd;
+			margin: 0 10px 0 0;
+		}
+		.light div {
+			width: 100px;
+			height: 100px;
+			margin: 10px 5px;
+			border-radius: 50%;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper"></div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+	var creatLightView = function (lid) {
+		var l1 = document.createElement('div');
+		document.getElementById('wrapper').appendChild(l1);
+		l1.className = 'light';
+		l1.id = lid;
+
+		var red = document.createElement('div');
+		red.className = 'red off';
+
+		var yellow = document.createElement('div');
+		yellow.className = 'yellow off';
+
+		var green = document.createElement('div');
+		green.className = 'green off';
+
+		l1.appendChild(red);
+		l1.appendChild(yellow);
+		l1.appendChild(green);
+
+		return l1;
+	}
+
+	HTMLElement.prototype.getElementByClass = function(c_name) {
+		var ret = [];
+		var el = this.getElementsByTagName('*');
+		var reg = new RegExp('(^|\\s+)'+c_name+'(\\s+|$)');
+		for (var i in el) {
+			if (reg.test(el[i].className)) {
+				ret.push(el[i]);
+			}
+		}
+		return ret;
+	}
+
+	HTMLElement.prototype.hasClass = function(c_name) {
+		var reg = new RegExp('(^|\\s+)'+c_name+'(\\s+|$)');
+		return reg.test(this.className);
+	}
+
+	HTMLElement.prototype.addClass = function(c_name) {
+		if (!this.hasClass(c_name)) {
+			this.className = String(this.className) + ' '+c_name;
+		}
+	}
+
+	HTMLElement.prototype.removeClass = function(c_name) {
+		if (this.hasClass(c_name)) {
+			var reg = new RegExp('(^|\\s+)'+c_name+'(\\s+|$)');
+			this.className = String(this.className).replace(reg, '');
+		}
+	}
+
+	var lightOn = function(color) {
+		if (!this.html_obj.hasClass('light')) return false;
+		var els = this.html_obj.getElementByClass(color);
+		for (var i in els) {
+			els[i].removeClass('off');
+			this[color] = true;
+		}
+	}
+
+	var lightOff = function(color) {
+		if (!this.html_obj.hasClass('light')) return false;
+		var els = this.html_obj.getElementByClass(color);
+		for (var i in els) {
+			els[i].addClass('off');
+			this[color] = false;
+		}
+	}
+
+	var Light = function(id) {
+		this.id = id;
+		this.html_obj = creatLightView(id);
+		this.red = false;
+		this.yellow = false;
+		this.green = false;
+		this.commands = commands;
+		this.c_num = 0;
+	}
+
+	Light.prototype.isWorking = false;
+	Light.prototype.on = lightOn;
+	Light.prototype.off = lightOff;
+	Light.prototype.start = function() {
+		if (this.isWorking) return ('Working already');
+		if (Number(this.id) == 1) {
+			l2.start();
+			l3.start();
+			l4.start();
+		}
+		this.c_num = 0;
+		this.isWorking = true;
+		if ((Number(this.id) % 2) == 0) {
+			this.c_num = 3;
+			this.on('green');
+		}
+		this.next()
+	};
+
+
+	Light.prototype.next = function() {
+		if (this.commands.length) {
+			if (typeof this.commands[this.c_num] == 'undefined') this.c_num = 0;
+			var c = this.commands[this.c_num];
+			var my = this;
+			var call_back = function() {
+				c.work.call(my);
+				my.next();
+			}
+			this.interval = setTimeout(call_back, c.time);
+			this.c_num++;
+		}
+	};
+
+	Light.prototype.stop = function() {
+		clearInterval(this.interval);
+		this.off('red');
+		this.off('yellow');
+		this.off('green');
+		this.isWorking = false;
+		if (Number(this.id) == 1) {
+			l2.stop();
+			l3.stop();
+			l4.stop();
+		}
+	};
+	
+	var commands = [
+		{ time: 0, work: function() {
+			this.on('red');
+		}},
+		{ time: 6000, work: function() {
+			this.on('yellow');
+		}},
+		{ time: 2000, work: function() {
+			this.off('red');
+			this.off('yellow');
+			this.on('green');
+		}},
+		{ time: 4000, work: function() {
+			this.off('green');
+		}},
+		{ time: 500, work: function() {
+			this.on('green');
+		}},
+		{ time: 500, work: function() {
+			this.off('green');
+		}},
+		{ time: 500, work: function() {
+			this.on('green');
+		}},
+		{ time: 500, work: function() {
+			this.off('green');
+			this.on('yellow');
+		}},
+		{ time: 2000, work: function() {
+			this.off('yellow');
+		}},
+	];
+
+	var l1 = new Light('1');
+
+	var l2 = new Light('2');
+
+	var l3 = new Light('3');
+
+	var l4 = new Light('4');
+
+	l1.start();
+
+	// 1 Отладить, проверить, разобраться в том как работает очередь комманд "светофора";	+-
+	// 2 Сделать l2, l3, l4 ведомыми у l1, т.е. так как работают светофоры на перекрестке.	+
+	// 3 Сделать невозможным повторный start и next											+ -
+
+</script>

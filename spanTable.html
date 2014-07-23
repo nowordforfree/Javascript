@@ -1,0 +1,58 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Table with row/col span</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style type="text/css">
+        .aaa {
+            margin: 0 auto;
+            border-collapse: collapse;
+            border: 1px solid black;
+            font: 12px/12px "Times New Roman" black;
+            width: 500px;
+        }
+        .aaa td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <table class="aaa">
+            <thead>
+                <tr>
+                    <th><a href="#">Date</a></th>
+                    <th><a href="#">Quant.</a></th>
+                    <th><a href="#">Text</a></th>
+                    <th><a href="#">Last</a></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>02-jan-2014</td>
+                    <td>25</td>
+                    <td>Test 1</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td rowspan="2">02-feb-2014</td>
+                    <td>30</td>
+                    <td>Text 2</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>Text 3</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>02-jun-2014</td>
+                    <td>45</td>
+                    <td>Text 4</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
