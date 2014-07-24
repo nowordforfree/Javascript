@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Table with row/col span</title>
     <meta charset="utf-8" />
@@ -11,10 +11,22 @@
             font: 12px/12px "Times New Roman" black;
             width: 500px;
         }
+        .aaa th {
+            border: 1px solid black;
+        }
         .aaa td {
             border: 1px solid black;
         }
     </style>
+    <script type="text/javascript">
+        function Init(tableId) {
+            var t = document.getElementById(tableId);
+            var rows = t.rows;
+            for (var i = 0; i < rows[0].length; i++) {
+                rows[0].cells[i]
+            }
+        }
+    </script>
 </head>
 <body>
     <div id="wrapper">
