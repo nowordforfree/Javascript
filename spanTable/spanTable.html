@@ -11,13 +11,15 @@
             font: 12px/12px "Times New Roman" black;
             width: 500px;
         }
-        .aaa th {
-            border: 1px solid black;
-            background-color: #ffd800;
-        }
-        .aaa td {
-            border: 1px solid black;
-        }
+
+            .aaa th {
+                border: 1px solid black;
+                background-color: #ffd800;
+            }
+
+            .aaa td {
+                border: 1px solid black;
+            }
     </style>
     <script type="text/javascript">
         function Init(tableId) {
@@ -29,9 +31,57 @@
             function Sort(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                var tabl = this.offsetParent;
-                var rows = tabl.rows;
-                console.log(tabl.querySelector('[rowspan]'));
+                this.className = 'asc';
+                if (this.className.indexOf('asc') == -1) {
+                    var span,
+                    tabl = this.offsetParent,
+                    rows = Array.prototype.slice.call(tabl.rows),
+                    col = [];
+                    rows.shift();
+                    for (var i = 0; i < rows.length; i++) {
+                        if (rows[i].querySelector('[rowspan]'))
+                            span = { rowNum: i, q: rows[i].querySelector('[rowspan]').rowSpan };
+                        col[i] = rows[i].cells[this.cellIndex];
+                    }
+                    console.log('array unsorted: ', col);
+                    col.sort(function (a, b) {
+                        if (isNumber(a.textContent) && isNumber(b.textContent)) {
+                            var a = Number(a.textContent),
+                                b = Number(b.textContent);
+                            return a === b ? 0 : (a < b ? -1 : 1);
+                        }
+                        else return a.textContent.localeCompare(b.textContent);
+                    });
+                    console.log('array sorted: ', col);
+                }
+                else {
+                    this.className = 'desc';
+                    var span,
+                    tabl = this.offsetParent,
+                    rows = Array.prototype.slice.call(tabl.rows),
+                    col = [];
+                    rows.shift();
+                    for (var i = 0; i < rows.length; i++) {
+                        if (rows[i].querySelector('[rowspan]'))
+                            span = { rowNum: i, q: rows[i].querySelector('[rowspan]').rowSpan };
+                        col[i] = rows[i].cells[this.cellIndex];
+                    }
+                    console.log('array unsorted: ', col);
+                    col.sort(function (a, b) {
+                        if (isNumber(a.textContent) && isNumber(b.textContent)) {
+                            var a = Number(a.textContent),
+                            b = Number(b.textContent);
+                            return a === b ? 0 : (b < a ? -1 : 1);
+                        }
+                        else return -a.textContent.localeCompare(b.textContent);
+                    });
+                    console.log('array sorted: ', col);
+                }
+                function isNumber(value) {
+                    if (!isNaN(parseFloat(value)) && isFinite(value))
+                        return true;
+                    else return false;
+                }
             }
         }
     </script>
