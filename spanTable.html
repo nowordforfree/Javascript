@@ -13,6 +13,7 @@
         }
         .aaa th {
             border: 1px solid black;
+            background-color: #ffd800;
         }
         .aaa td {
             border: 1px solid black;
@@ -22,15 +23,22 @@
         function Init(tableId) {
             var t = document.getElementById(tableId);
             var rows = t.rows;
-            for (var i = 0; i < rows[0].length; i++) {
-                rows[0].cells[i]
+            for (var i = 0; i < rows[0].cells.length; i++) {
+                rows[0].cells[i].addEventListener('click', Sort, true);
+            }
+            function Sort(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var tabl = this.offsetParent;
+                var rows = tabl.rows;
+                console.log(tabl.querySelector('[rowspan]'));
             }
         }
     </script>
 </head>
 <body>
     <div id="wrapper">
-        <table class="aaa">
+        <table class="aaa" id="aa">
             <thead>
                 <tr>
                     <th><a href="#">Date</a></th>
