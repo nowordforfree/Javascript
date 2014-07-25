@@ -51,15 +51,8 @@
                             col[i] = rows[i].cells[this.cellIndex];
                         }
                     }
-                    console.log('array unsorted: ', col);
-                    console.log('array sorted: ', col.sort(function (a, b) {
-                        if (isNumber(a.textContent) && isNumber(b.textContent)) {
-                            var a = Number(a.textContent),
-                                b = Number(b.textContent);
-                            return a === b ? 0 : (a < b ? -1 : 1);
-                        }
-                        else return a.textContent.localeCompare(b.textContent);
-                    }));
+                    col.sort(SortAsc);
+                    console.log('array sorted: ', col);
                 }
                 else {
                     this.className = 'desc';
@@ -79,16 +72,28 @@
                             col[i] = rows[i].cells[this.cellIndex];
                         }
                     }
-                    console.log('array unsorted: ', col);
-                    col.sort(function (a, b) {
+                    col.sort(SortDesc);
+                    console.log('array sorted: ', col);
+                }
+                function SortAsc() {
+                    return function (a, b) {
+                        if (isNumber(a.textContent) && isNumber(b.textContent)) {
+                            var a = Number(a.textContent),
+                                b = Number(b.textContent);
+                            return a === b ? 0 : (a < b ? -1 : 1);
+                        }
+                        else return a.textContent.localeCompare(b.textContent);
+                    }
+                }
+                function SortDesc() {
+                    return function (a, b) {
                         if (isNumber(a.textContent) && isNumber(b.textContent)) {
                             var a = Number(a.textContent),
                             b = Number(b.textContent);
                             return a === b ? 0 : (b < a ? -1 : 1);
                         }
                         else return -a.textContent.localeCompare(b.textContent);
-                    });
-                    console.log('array sorted: ', col);
+                    }
                 }
                 function isNumber(value) {
                     if (!isNaN(parseFloat(value)) && isFinite(value))
