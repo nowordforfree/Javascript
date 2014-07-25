@@ -31,40 +31,53 @@
             function Sort(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                this.className = 'asc';
                 if (this.className.indexOf('asc') == -1) {
+                    this.className = 'asc';
                     var span,
-                    tabl = this.offsetParent,
-                    rows = Array.prototype.slice.call(tabl.rows),
-                    col = [];
+                        tabl = this.offsetParent,
+                        rows = Array.prototype.slice.call(tabl.rows),
+                        col = [];
                     rows.shift();
                     for (var i = 0; i < rows.length; i++) {
-                        if (rows[i].querySelector('[rowspan]'))
-                            span = { rowNum: i, q: rows[i].querySelector('[rowspan]').rowSpan };
-                        col[i] = rows[i].cells[this.cellIndex];
+                        if (span) {
+                            col[i] = rows[i].cells[this.cellIndex - 1];
+                            span--;
+                        }
+                        else {
+                            if (rows[i].querySelector('[rowspan]')) {
+                                var spanned = rows[i].querySelector('[rowspan]');
+                                span = rows[i].querySelector('[rowspan]').rowSpan - 1;
+                            }
+                            col[i] = rows[i].cells[this.cellIndex];
+                        }
                     }
                     console.log('array unsorted: ', col);
-                    col.sort(function (a, b) {
+                    console.log('array sorted: ', col.sort(function (a, b) {
                         if (isNumber(a.textContent) && isNumber(b.textContent)) {
                             var a = Number(a.textContent),
                                 b = Number(b.textContent);
                             return a === b ? 0 : (a < b ? -1 : 1);
                         }
                         else return a.textContent.localeCompare(b.textContent);
-                    });
-                    console.log('array sorted: ', col);
+                    }));
                 }
                 else {
                     this.className = 'desc';
                     var span,
-                    tabl = this.offsetParent,
-                    rows = Array.prototype.slice.call(tabl.rows),
-                    col = [];
+                        tabl = this.offsetParent,
+                        rows = Array.prototype.slice.call(tabl.rows),
+                        col = [];
                     rows.shift();
                     for (var i = 0; i < rows.length; i++) {
-                        if (rows[i].querySelector('[rowspan]'))
-                            span = { rowNum: i, q: rows[i].querySelector('[rowspan]').rowSpan };
-                        col[i] = rows[i].cells[this.cellIndex];
+                        if (span) {
+                            col[i] = rows[i].cells[this.cellIndex - 1];
+                            span--;
+                        }
+                        else {
+                            if (rows[i].querySelector('[rowspan]'))
+                                span = { rowNum: i, q: rows[i].querySelector('[rowspan]').rowSpan };
+                            col[i] = rows[i].cells[this.cellIndex];
+                        }
                     }
                     console.log('array unsorted: ', col);
                     col.sort(function (a, b) {
