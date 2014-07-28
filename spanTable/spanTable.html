@@ -39,20 +39,21 @@
                         col = [];
                     rows.shift();
                     for (var i = 0; i < rows.length; i++) {
-                        if (span) {
-                            col[i] = rows[i].cells[this.cellIndex - 1];
-                            span--;
-                        }
-                        else {
-                            if (rows[i].querySelector('[rowspan]')) {
-                                var spancell = rows[i].querySelector('[rowspan]');
-                                if (spancell.cellIndex < rows[i].cells[this.cellIndex].cellIndex)
-                                    span = rows[i].querySelector('[rowspan]').rowSpan - 1;
-                                if (spancell.cellIndex === rows[i].cells[this.cellIndex].cellIndex)
-                                    col[i] = rows[i].cells[this.cellIndex];
+                        if (rows[i].querySelector('[rowspan]')) {
+                            var spancell = rows[i].querySelector('[rowspan]');
+                            if (spancell.cellIndex === rows[i].cells[this.cellIndex].cellIndex) {
+                                col[i] = rows[i].cells[this.cellIndex];
                             }
-                            col[i] = rows[i].cells[this.cellIndex];
+                            else {
+                                col[i] = [];
+                                col[i][0] = rows[i].cells[this.cellIndex]
+                                for (var s = 1; s < spancell.rowSpan; s++) {
+                                    col[i][s] = rows[i + s].cells[this.cellIndex - 1];
+                                }
+                            }
+                            i += spancell.rowSpan;
                         }
+                        else col[i] = rows[i].cells[this.cellIndex];
                     }
                     col.sort(SortAsc());
                     console.log(col);
@@ -65,18 +66,27 @@
                         col = [];
                     rows.shift();
                     for (var i = 0; i < rows.length; i++) {
-                        if (span) {
-                            col[i] = rows[i].cells[this.cellIndex - 1];
-                            span--;
-                        }
-                        else {
-                            if (rows[i].querySelector('[rowspan]')) {
-                                var spancell = rows[i].querySelector('[rowspan]');
-                                if (spancell.cellIndex < rows[i].cells[this.cellIndex].cellIndex)
-                                    span = rows[i].querySelector('[rowspan]').rowSpan - 1;
+                        if (rows[i].querySelector('[rowspan]')) {
+                            var spancell = rows[i].querySelector('[rowspan]');
+                            if (spancell.cellIndex === rows[i].cells[this.cellIndex].cellIndex) {
+                                col[i] = [];
+                                col[i][0] = rows[i].cells[this.cellIndex]
+                                for (var s = 1; s < spancell.rowSpan; s++) {
+                                    col[i][s] = rows[i + s].cells[this.cellIndex - 1];
+                                }
                             }
-                            col[i] = rows[i].cells[this.cellIndex];
+                            else {
+                                col[i] = [];
+                                col[i][0] = rows[i].cells[this.cellIndex]
+                                for (var s = 1; s < spancell.rowSpan; s++) {
+                                    if (spancell.cellIndex < this.cellIndex)
+                                        col[i][s] = rows[i + s].cells[this.cellIndex - 1];
+                                    else col[i][s] = rows[i + s].cells[this.cellIndex];
+                                }
+                            }
+                            i += spancell.rowSpan - 1;
                         }
+                        else col.push(rows[i].cells[this.cellIndex]);
                     }
                     col.sort(SortDesc());
                     console.log(col);
