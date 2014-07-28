@@ -45,14 +45,17 @@
                         }
                         else {
                             if (rows[i].querySelector('[rowspan]')) {
-                                var spanned = rows[i].querySelector('[rowspan]');
-                                span = rows[i].querySelector('[rowspan]').rowSpan - 1;
+                                var spancell = rows[i].querySelector('[rowspan]');
+                                if (spancell.cellIndex < rows[i].cells[this.cellIndex].cellIndex)
+                                    span = rows[i].querySelector('[rowspan]').rowSpan - 1;
+                                if (spancell.cellIndex === rows[i].cells[this.cellIndex].cellIndex)
+                                    col[i] = rows[i].cells[this.cellIndex];
                             }
                             col[i] = rows[i].cells[this.cellIndex];
                         }
                     }
-                    col.sort(SortAsc);
-                    console.log('array sorted: ', col);
+                    col.sort(SortAsc());
+                    console.log(col);
                 }
                 else {
                     this.className = 'desc';
@@ -67,13 +70,16 @@
                             span--;
                         }
                         else {
-                            if (rows[i].querySelector('[rowspan]'))
-                                span = { rowNum: i, q: rows[i].querySelector('[rowspan]').rowSpan };
+                            if (rows[i].querySelector('[rowspan]')) {
+                                var spancell = rows[i].querySelector('[rowspan]');
+                                if (spancell.cellIndex < rows[i].cells[this.cellIndex].cellIndex)
+                                    span = rows[i].querySelector('[rowspan]').rowSpan - 1;
+                            }
                             col[i] = rows[i].cells[this.cellIndex];
                         }
                     }
-                    col.sort(SortDesc);
-                    console.log('array sorted: ', col);
+                    col.sort(SortDesc());
+                    console.log(col);
                 }
                 function SortAsc() {
                     return function (a, b) {
