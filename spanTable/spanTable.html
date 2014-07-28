@@ -33,9 +33,7 @@
                 e.stopPropagation();
                 if (this.className.indexOf('asc') == -1) {
                     this.className = 'asc';
-                    var span,
-                        tabl = this.offsetParent,
-                        rows = Array.prototype.slice.call(tabl.rows),
+                    var rows = Array.prototype.slice.call(this.offsetParent.rows),
                         col = [];
                     rows.shift();
                     for (var i = 0; i < rows.length; i++) {
@@ -45,50 +43,51 @@
                                 col[i] = rows[i].cells[this.cellIndex];
                             }
                             else {
-                                col[i] = [];
-                                col[i][0] = rows[i].cells[this.cellIndex]
+                                var temparr = [];
+                                temparr[0] = rows[i].cells[this.cellIndex]
                                 for (var s = 1; s < spancell.rowSpan; s++) {
-                                    col[i][s] = rows[i + s].cells[this.cellIndex - 1];
+                                    if (spancell.cellIndex < this.cellIndex)
+                                        temparr[s] = rows[i + s].cells[this.cellIndex - 1];
+                                    else temparr[s] = rows[i + s].cells[this.cellIndex];
                                 }
+                                temparr.sort(SortAsc());
+                                col[i] = temparr[0];
                             }
-                            i += spancell.rowSpan;
+                            i += spancell.rowSpan - 1;
                         }
-                        else col[i] = rows[i].cells[this.cellIndex];
+                        else col.push(rows[i].cells[this.cellIndex]);
                     }
                     col.sort(SortAsc());
                     console.log(col);
                 }
                 else {
                     this.className = 'desc';
-                    var span,
-                        tabl = this.offsetParent,
-                        rows = Array.prototype.slice.call(tabl.rows),
+                    var rows = Array.prototype.slice.call(this.offsetParent.rows),
                         col = [];
                     rows.shift();
                     for (var i = 0; i < rows.length; i++) {
                         if (rows[i].querySelector('[rowspan]')) {
                             var spancell = rows[i].querySelector('[rowspan]');
                             if (spancell.cellIndex === rows[i].cells[this.cellIndex].cellIndex) {
-                                col[i] = [];
-                                col[i][0] = rows[i].cells[this.cellIndex]
-                                for (var s = 1; s < spancell.rowSpan; s++) {
-                                    col[i][s] = rows[i + s].cells[this.cellIndex - 1];
-                                }
+                                col[i] = rows[i].cells[this.cellIndex];
                             }
                             else {
-                                col[i] = [];
-                                col[i][0] = rows[i].cells[this.cellIndex]
+                                var temparr = [];
+                                temparr[0] = rows[i].cells[this.cellIndex]
                                 for (var s = 1; s < spancell.rowSpan; s++) {
                                     if (spancell.cellIndex < this.cellIndex)
-                                        col[i][s] = rows[i + s].cells[this.cellIndex - 1];
-                                    else col[i][s] = rows[i + s].cells[this.cellIndex];
+                                        temparr[s] = rows[i + s].cells[this.cellIndex - 1];
+                                    else temparr[s] = rows[i + s].cells[this.cellIndex];
                                 }
+                                temparr.sort(SortDesc());
+                                col[i] = temparr[0];
                             }
                             i += spancell.rowSpan - 1;
                         }
                         else col.push(rows[i].cells[this.cellIndex]);
                     }
                     col.sort(SortDesc());
+                    moveRows(this.offsetParent, col);
                     console.log(col);
                 }
                 function SortAsc() {
@@ -105,7 +104,7 @@
                     return function (a, b) {
                         if (isNumber(a.textContent) && isNumber(b.textContent)) {
                             var a = Number(a.textContent),
-                            b = Number(b.textContent);
+                                b = Number(b.textContent);
                             return a === b ? 0 : (b < a ? -1 : 1);
                         }
                         else return -a.textContent.localeCompare(b.textContent);
@@ -115,6 +114,18 @@
                     if (!isNaN(parseFloat(value)) && isFinite(value))
                         return true;
                     else return false;
+                }
+                function moveRows(tbl, tdsArr) {
+                    var rows = Array.prototype.slice.call(tbl.rows),
+                        indexes = [];
+                    for (var x in tdsArr) indexes[x] = x;
+                    for (var i = 0; i < indexes.length; i++) {
+                        if (indexes[i] !== i + 1) {
+                            if (indexes[i] > i + 1)
+                                rows[i + 1].parentNode.insertBefore(tdsArr[i].parentNode, rows[i + 1]);
+                            else rows[i + 1].parentNode.insertBefore(tdsArr[i].parentNode, rows[i + 2]);
+                        }
+                    }
                 }
             }
         }
@@ -133,13 +144,13 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>02-jan-2014</td>
+                    <td>2/01/2014</td>
                     <td>25</td>
                     <td>Test 1</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td rowspan="2">02-feb-2014</td>
+                    <td rowspan="2">2/02/2014</td>
                     <td>30</td>
                     <td>Text 2</td>
                     <td></td>
@@ -150,7 +161,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>02-jun-2014</td>
+                    <td>2/06/2014</td>
                     <td>45</td>
                     <td>Text 4</td>
                     <td></td>
