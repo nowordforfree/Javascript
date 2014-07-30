@@ -80,6 +80,7 @@
                                     else temparr[s] = rows[i + s].cells[this.cellIndex];
                                 }
                                 temparr.sort(SortDesc());
+                                moveRows(this.offsetParent, temparr);
                                 col[i] = temparr[0];
                             }
                             i += spancell.rowSpan - 1;
@@ -116,14 +117,12 @@
                     else return false;
                 }
                 function moveRows(tbl, tdsArr) {
-                    var rows = Array.prototype.slice.call(tbl.rows),
-                        indexes = [];
-                    for (var x in tdsArr) indexes[x] = x;
-                    for (var i = 0; i < indexes.length; i++) {
-                        if (indexes[i] !== i + 1) {
-                            if (indexes[i] > i + 1)
-                                rows[i + 1].parentNode.insertBefore(tdsArr[i].parentNode, rows[i + 1]);
-                            else rows[i + 1].parentNode.insertBefore(tdsArr[i].parentNode, rows[i + 2]);
+                    for (var i = 0; i < tdsArr.length; i++) {
+                        var index = tdsArr[i].parentNode.rowIndex;
+                        if (index !== i + 1) {
+                            if (i + 1 > index)
+                                tbl.rows[i + 1].parentNode.insertBefore(tdsArr[i].parentNode, tbl.rows[i + 2]);
+                            else tbl.rows[i + 1].parentNode.insertBefore(tdsArr[i].parentNode, tbl.rows[i + 1]);
                         }
                     }
                 }
