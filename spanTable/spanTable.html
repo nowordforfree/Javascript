@@ -80,7 +80,7 @@
                                     else temparr[s] = rows[i + s].cells[this.cellIndex];
                                 }
                                 temparr.sort(SortDesc());
-                                moveRows(spancell, temparr);
+                                moveRows(temparr, spancell.parentNode);
                                 for (var j in temparr)
                                     col.push(temparr[j]);
                             }
@@ -89,7 +89,7 @@
                         else col.push(rows[i].cells[this.cellIndex]);
                     }
                     col.sort(SortDesc());
-                    moveRows(this.offsetParent, col);
+                    moveRows(col);
                     console.log(col);
                 }
                 function SortAsc() {
@@ -117,19 +117,21 @@
                         return true;
                     else return false;
                 }
-                function moveRows(elem, tdsArr) {
-                    var index = tdsArr[i].parentNode.rowIndex,
-                        spancell = tdsArr[i].parentNode.querySelector('[rowspan]');
+                function moveRows(tdsArr) {
                     for (var i = 0; i < tdsArr.length; i++) {
-                        if (elem.hasAttribute('rowspan')) {
+                        var index = tdsArr[i].parentNode.rowIndex,
+                            spancell = tdsArr[i].parentNode.querySelector('[rowspan]');
+                        if (arguments[1]) {
                             for (var i = 0; i < tdsArr.length; i++) {
-                                if (index !== spancell.parentNode.rowIndex + i) {
-
+                                if (index !== arguments[1].rowIndex + i) {
+                                    arguments[1].parentNode.insertBefore(tdsArr[i].parentNode, arguments[1]);
                                 }
                             }
+                            tdsArr[0].parentNode.insertBefore(arguments[1].querySelector('[rowspan]'), tdsArr[0].parentNode.cells[0])
                         }
                         else {
                             if (index !== i + 1) {
+                                var elem = tdsArr[0].offsetParent;
                                 if (i + 1 > index) {
                                     if (spancell) {
                                         for (var j = 0; j < spancell.rowSpan; j++) {
