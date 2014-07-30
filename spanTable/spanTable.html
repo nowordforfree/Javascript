@@ -68,7 +68,7 @@
                     for (var i = 0; i < rows.length; i++) {
                         if (rows[i].querySelector('[rowspan]')) {
                             var spancell = rows[i].querySelector('[rowspan]');
-                            if (spancell.cellIndex === rows[i].cells[this.cellIndex].cellIndex) {
+                            if (spancell.cellIndex === this.cellIndex) {
                                 col[i] = rows[i].cells[this.cellIndex];
                             }
                             else {
@@ -81,7 +81,8 @@
                                 }
                                 temparr.sort(SortDesc());
                                 moveRows(this.offsetParent, temparr);
-                                col[i] = temparr[0];
+                                for (var j in temparr)
+                                    col.push(temparr[j]);
                             }
                             i += spancell.rowSpan - 1;
                         }
@@ -118,11 +119,25 @@
                 }
                 function moveRows(tbl, tdsArr) {
                     for (var i = 0; i < tdsArr.length; i++) {
-                        var index = tdsArr[i].parentNode.rowIndex;
+                        var index = tdsArr[i].parentNode.rowIndex,
+                            spancell = tdsArr[i].parentNode.querySelector('[rowspan]');
                         if (index !== i + 1) {
-                            if (i + 1 > index)
-                                tbl.rows[i + 1].parentNode.insertBefore(tdsArr[i].parentNode, tbl.rows[i + 2]);
-                            else tbl.rows[i + 1].parentNode.insertBefore(tdsArr[i].parentNode, tbl.rows[i + 1]);
+                            if (i + 1 > index) {
+                                if (spancell) {
+                                    for (var j = 0; j < spancell.rowSpan; j++) {
+                                        tbl.rows[i + 1].parentNode.insertBefore(tbl.rows[index], tbl.rows[i + 2]);
+                                    }
+                                }
+                                else tbl.rows[i + 1].parentNode.insertBefore(tbl.rows[index], tbl.rows[i + 2]);
+                            }
+                            else {
+                                if (spancell) {
+                                    for (var j = 0; j < spancell.rowSpan; j++) {
+                                        tbl.rows[i + 1].parentNode.insertBefore(tbl.rows[index + spancell.rowSpan - 1], tbl.rows[i + 1]);
+                                    }
+                                }
+                                else tbl.rows[i + 1].parentNode.insertBefore(tbl.rows[index], tbl.rows[i + 1]);
+                            }
                         }
                     }
                 }
