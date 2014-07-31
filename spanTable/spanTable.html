@@ -47,7 +47,8 @@
                 if (this.className.indexOf('asc') == -1) {
                     this.className = 'asc';
                     var rows = Array.prototype.slice.call(this.offsetParent.rows),
-                        col = [];
+                        col = [],
+                        insertInCol = [];
                     rows.shift();
                     for (var i = 0; i < rows.length; i++) {
                         if (rows[i].querySelector('[rowspan]')) {
@@ -56,31 +57,36 @@
                                 col[i] = rows[i].cells[this.cellIndex];
                             }
                             else {
-                                var temparr = [];
-                                temparr[0] = rows[i].cells[this.cellIndex]
+                                insertInCol[0] = rows[i].cells[this.cellIndex]
                                 for (var s = 1; s < spancell.rowSpan; s++) {
                                     if (spancell.cellIndex < this.cellIndex)
-                                        temparr[s] = rows[i + s].cells[this.cellIndex - 1];
-                                    else temparr[s] = rows[i + s].cells[this.cellIndex];
+                                        insertInCol[s] = rows[i + s].cells[this.cellIndex - 1];
+                                    else insertInCol[s] = rows[i + s].cells[this.cellIndex];
                                 }
-                                temparr.sort(SortAsc());
-                                moveRows(temparr, spancell.parentNode);
-                                col.push(temparr[0]);
-                                //for (var j in temparr)
-                                //    col.push(temparr[j]);
+                                insertInCol.sort(SortAsc());
+                                moveRows(insertInCol, spancell.parentNode);
+                                col.push(insertInCol[0]);
                             }
                             i += spancell.rowSpan - 1;
                         }
                         else col.push(rows[i].cells[this.cellIndex]);
                     }
                     col.sort(SortAsc());
+                    for (var x = 0; x < col.length; x++) {
+                        if (col[x] === insertInCol[0]) {
+                            for (var y = 1; y < insertInCol.length; y++) {
+                                col.splice(x + 1, 0, insertInCol[y]);
+                            }
+                        }
+                    }
                     moveRows(col);
                     console.log(col);
                 }
                 else {
                     this.className = 'desc';
                     var rows = Array.prototype.slice.call(this.offsetParent.rows),
-                        col = [];
+                        col = [],
+                        insertInCol = [];
                     rows.shift();
                     for (var i = 0; i < rows.length; i++) {
                         if (rows[i].querySelector('[rowspan]')) {
@@ -89,24 +95,28 @@
                                 col[i] = rows[i].cells[this.cellIndex];
                             }
                             else {
-                                var temparr = [];
-                                temparr[0] = rows[i].cells[this.cellIndex]
+                                insertInCol[0] = rows[i].cells[this.cellIndex]
                                 for (var s = 1; s < spancell.rowSpan; s++) {
                                     if (spancell.cellIndex < this.cellIndex)
-                                        temparr[s] = rows[i + s].cells[this.cellIndex - 1];
-                                    else temparr[s] = rows[i + s].cells[this.cellIndex];
+                                        insertInCol[s] = rows[i + s].cells[this.cellIndex - 1];
+                                    else insertInCol[s] = rows[i + s].cells[this.cellIndex];
                                 }
-                                temparr.sort(SortDesc());
-                                moveRows(temparr, spancell.parentNode);
-                                col.push(temparr[0]);
-                                //for (var j in temparr)
-                                //    col.push(temparr[j]);
+                                insertInCol.sort(SortDesc());
+                                moveRows(insertInCol, spancell.parentNode);
+                                col.push(insertInCol[0]);
                             }
                             i += spancell.rowSpan - 1;
                         }
                         else col.push(rows[i].cells[this.cellIndex]);
                     }
                     col.sort(SortDesc());
+                    for (var x = 0; x < col.length; x++) {
+                        if (col[x] === insertInCol[0]) {
+                            for (var y = 1; y < insertInCol.length; y++) {
+                                col.splice(x + 1, 0, insertInCol[y]);
+                            }
+                        }
+                    }
                     moveRows(col);
                     console.log(col);
                 }
@@ -170,6 +180,10 @@
                                     else elem.rows[i + 1].parentNode.insertBefore(elem.rows[index], elem.rows[i + 1]);
                                 }
                                 moveAgain = true;
+                            }
+                            else {
+                                if (spancell && index === i + 1)
+                                    i += spancell.rowSpan - 1;
                             }
                         }
                     }
