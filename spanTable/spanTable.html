@@ -54,7 +54,10 @@
                         if (rows[i].querySelector('[rowspan]')) {
                             var spancell = rows[i].querySelector('[rowspan]');
                             if (spancell.cellIndex === this.cellIndex) {
-                                col[i] = rows[i].cells[this.cellIndex];
+                                for (var s = 0; s < spancell.rowSpan; s++) {
+                                    insertInCol.push(rows[i + s].cells[this.cellIndex])
+                                }
+                                col.push(insertInCol[0]);
                             }
                             else {
                                 insertInCol[0] = rows[i].cells[this.cellIndex]
@@ -92,7 +95,10 @@
                         if (rows[i].querySelector('[rowspan]')) {
                             var spancell = rows[i].querySelector('[rowspan]');
                             if (spancell.cellIndex === this.cellIndex) {
-                                col[i] = rows[i].cells[this.cellIndex];
+                                for (var s = 0; s < spancell.rowSpan; s++) {
+                                    insertInCol.push(rows[i + s].cells[this.cellIndex])
+                                }
+                                col.push(insertInCol[0]);
                             }
                             else {
                                 insertInCol[0] = rows[i].cells[this.cellIndex]
@@ -167,8 +173,10 @@
                                         for (var j = 0; j < spancell.rowSpan; j++) {
                                             elem.rows[i + 1].parentNode.insertBefore(elem.rows[index], elem.rows[i + 2]);
                                         }
+                                        moveAgain = true;
                                     }
                                     else elem.rows[i + 1].parentNode.insertBefore(elem.rows[index], elem.rows[i + 2]);
+                                    moveAgain = true;
                                 }
                                 else {
                                     if (spancell) {
@@ -176,10 +184,11 @@
                                             elem.rows[i + 1].parentNode.insertBefore(elem.rows[index + spancell.rowSpan - 1], elem.rows[i + 1]);
                                         }
                                         i += spancell.rowSpan - 1;
+                                        moveAgain = true;
                                     }
                                     else elem.rows[i + 1].parentNode.insertBefore(elem.rows[index], elem.rows[i + 1]);
+                                    moveAgain = true;
                                 }
-                                moveAgain = true;
                             }
                             else {
                                 if (spancell && index === i + 1)
