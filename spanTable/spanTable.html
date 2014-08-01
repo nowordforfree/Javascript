@@ -54,31 +54,32 @@
                         if (rows[i].querySelector('[rowspan]')) {
                             var spancell = rows[i].querySelector('[rowspan]');
                             if (spancell.cellIndex === this.cellIndex) {
-                                for (var s = 0; s < spancell.rowSpan; s++) {
-                                    insertInCol.push(rows[i + s].cells[this.cellIndex])
-                                }
-                                col.push(insertInCol[0]);
+                                col.push(spancell);
                             }
                             else {
-                                insertInCol[0] = rows[i].cells[this.cellIndex]
-                                for (var s = 1; s < spancell.rowSpan; s++) {
+                                insertInCol[insertInCol.length] = [];
+                                for (var s = 0; s < spancell.rowSpan; s++) {
                                     if (spancell.cellIndex < this.cellIndex)
-                                        insertInCol[s] = rows[i + s].cells[this.cellIndex - 1];
-                                    else insertInCol[s] = rows[i + s].cells[this.cellIndex];
+                                        insertInCol[insertInCol.length - 1][s] = rows[i + s].cells[this.cellIndex - 1];
+                                    else insertInCol[insertInCol.length - 1][s] = rows[i + s].cells[this.cellIndex];
                                 }
-                                insertInCol.sort(SortAsc());
-                                moveRows(insertInCol, spancell.parentNode);
-                                col.push(insertInCol[0]);
+                                insertInCol[insertInCol.length - 1].sort(SortAsc());
+                                moveRows(insertInCol[insertInCol.length - 1], spancell.parentNode);
+                                col.push(insertInCol[insertInCol.length - 1][0]);
                             }
                             i += spancell.rowSpan - 1;
                         }
                         else col.push(rows[i].cells[this.cellIndex]);
                     }
                     col.sort(SortAsc());
-                    for (var x = 0; x < col.length; x++) {
-                        if (col[x] === insertInCol[0]) {
-                            for (var y = 1; y < insertInCol.length; y++) {
-                                col.splice(x + 1, 0, insertInCol[y]);
+                    if (insertInCol[0] !== undefined) {
+                        for (var x = 0; x < insertInCol.length; x++) {
+                            for (var y = 0; y < col.length; y++) {
+                                if (col[y] === insertInCol[x][0]) {
+                                    for (var z = 1; z < insertInCol[x].length; z++) {
+                                        col.splice(y + 1, 0, insertInCol[x][z]);
+                                    }
+                                }
                             }
                         }
                     }
@@ -95,31 +96,32 @@
                         if (rows[i].querySelector('[rowspan]')) {
                             var spancell = rows[i].querySelector('[rowspan]');
                             if (spancell.cellIndex === this.cellIndex) {
-                                for (var s = 0; s < spancell.rowSpan; s++) {
-                                    insertInCol.push(rows[i + s].cells[this.cellIndex])
-                                }
-                                col.push(insertInCol[0]);
+                                col.push(spancell);
                             }
                             else {
-                                insertInCol[0] = rows[i].cells[this.cellIndex]
-                                for (var s = 1; s < spancell.rowSpan; s++) {
+                                insertInCol[insertInCol.length] = [];
+                                for (var s = 0; s < spancell.rowSpan; s++) {
                                     if (spancell.cellIndex < this.cellIndex)
-                                        insertInCol[s] = rows[i + s].cells[this.cellIndex - 1];
-                                    else insertInCol[s] = rows[i + s].cells[this.cellIndex];
+                                        insertInCol[insertInCol.length - 1][s] = rows[i + s].cells[this.cellIndex - 1];
+                                    else insertInCol[insertInCol.length - 1][s] = rows[i + s].cells[this.cellIndex];
                                 }
-                                insertInCol.sort(SortDesc());
-                                moveRows(insertInCol, spancell.parentNode);
-                                col.push(insertInCol[0]);
+                                insertInCol[insertInCol.length - 1].sort(SortDesc());
+                                moveRows(insertInCol[insertInCol.length - 1], spancell.parentNode);
+                                col.push(insertInCol[insertInCol.length - 1][0]);
                             }
                             i += spancell.rowSpan - 1;
                         }
                         else col.push(rows[i].cells[this.cellIndex]);
                     }
                     col.sort(SortDesc());
-                    for (var x = 0; x < col.length; x++) {
-                        if (col[x] === insertInCol[0]) {
-                            for (var y = 1; y < insertInCol.length; y++) {
-                                col.splice(x + 1, 0, insertInCol[y]);
+                    if (insertInCol[0] !== undefined) {
+                        for (var x = 0; x < insertInCol.length; x++) {
+                            for (var y = 0; y < col.length; y++) {
+                                if (col[y] === insertInCol[x][0]) {
+                                    for (var z = 1; z < insertInCol[x].length; z++) {
+                                        col.splice(y + 1, 0, insertInCol[x][z]);
+                                    }
+                                }
                             }
                         }
                     }
