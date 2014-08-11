@@ -38,12 +38,11 @@
             var t = document.getElementById(tableId);
             var rows = t.rows;
             for (var i = 0; i < rows[0].cells.length; i++) {
-                rows[0].cells[i].addEventListener('click', Sort, true);
+                rows[0].cells[i].addEventListener('click', Sort, false);
             }
             function Sort(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                var iterations = 0;
                 if (this.className.indexOf('asc') == -1) {
                     this.className = 'asc';
                     var rows = Array.prototype.slice.call(this.offsetParent.rows),
@@ -74,7 +73,6 @@
                     }
                     col.sort(SortAsc());
                     moveRows(col);
-                    console.log(col);
                 }
                 else {
                     this.className = 'desc';
@@ -106,7 +104,6 @@
                     }
                     col.sort(SortDesc());
                     moveRows(col);
-                    console.log(col);
                 }
                 function SortAsc() {
                     return function (a, b) {
@@ -148,7 +145,11 @@
                                 else spanrow.parentNode.insertBefore(tdsArr[i].parentNode, elem.rows[spanRowIndex + i + 1]);
                             }
                         }
-                        tdsArr[0].parentNode.insertBefore(spanrow.querySelector('[rowspan]'), tdsArr[0].parentNode.cells[0]);
+                        if (tdsArr[0].parentNode !== spanrow) {
+                            if (spancell.cellIndex === spanrow.cells.length - 1)
+                                tdsArr[0].parentNode.insertBefore(spancell, tdsArr[0].parentNode.cells[spancell.cellIndex + 1]);
+                            else tdsArr[0].parentNode.insertBefore(spancell, tdsArr[0].parentNode.cells[spancell.cellIndex]);
+                        }
                     }
                     else {
                         for (var i = 0; i < tdsArr.length; i++) {
@@ -194,8 +195,6 @@
                                 }
                             }
                     }
-                    iterations++;
-                    console.log(iterations + ' ' + moveAgain);
                     if (moveAgain)
                         moveRows(tdsArr, spanrow);
                 }
@@ -263,28 +262,32 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td rowspan="5">2014-10-12</td>
+                    <td>2014-10-12</td>
                     <td>90</td>
-                    <td>Text 9</td>
+                    <td rowspan="5">Text 9</td>
                     <td>1</td>
                 </tr>
                 <tr>
-                    <!--<td>2013-04-02</td>-->
+                    <td>2013-04-02</td>
                     <td>250</td>
-                    <td>Text 10</td>
+                    <!--<td>Text 10</td>-->
                     <td>2</td>
                 </tr>
                 <tr>
-                    <td rowspan="3">115</td>
-                    <td>Text 11</td>
+                    <td>2014-09-02</td>
+                    <td>115</td>
+                    <!--<td>Text 11</td>-->
                     <td>3</td>
                 </tr>
                 <tr>
-                    <td rowspan="2">Text 12</td>
+                    <td>2014-09-05</td>
+                    <td>60</td>
+                    <!--<td>Text 12</td>-->
                     <td>4</td>
                 </tr>
                 <tr>
-                    <!--<td>20</td>-->
+                    <td>2014-09-11</td>
+                    <td>20</td>
                     <!--<td>Text 13</td>-->
                     <td>5</td>
                 </tr>

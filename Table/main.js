@@ -25,6 +25,7 @@ var TableTool = {
                     img.src = 'img/arrowInit.png';
                     img.style.width = '10px';
                     img.style.height = '10px';
+                    img.style.cssFloat = 'right';
                     img.ondrag = function () { return false; };
                     return el;
                 }
@@ -35,138 +36,177 @@ var TableTool = {
                     var asc = t.querySelector('.sorted-ascending'),
                         desc = t.querySelector('.sorted-descending');
                     if (asc === null && desc === null) {
-                        el.className += ' sorted-ascending';
+                        el.className = el.className === '' ? 'sorted-ascending' : el.className + ' sorted-ascending';
                         el.querySelector('img').src = 'img/arrowDown.png';
-                        el.querySelector('img').setAttribute('title', 'ascending');
-                        setTableData(t, getTableData(t).sort(SortAsc(el.cellIndex)));
+                        el.setAttribute('title', 'sorted ascending');
+                        moveRows(getTableData(t, el.cellIndex, SortAsc).sort(SortAsc()));
                     }
                     else {
                         if (asc !== null) {
-                            if (asc != el) {
+                            if (asc !== el) {
                                 asc.querySelector('img').src = 'img/arrowInit.png';
-                                asc.querySelector('img').removeAttribute('title');
+                                asc.removeAttribute('title');
                                 asc.className = asc.className.replace('sorted-ascending', '');
                                 el.className += ' sorted-ascending';
                                 el.querySelector('img').src = 'img/arrowDown.png';
-                                el.querySelector('img').setAttribute('title', 'ascending');
-                                setTableData(t, getTableData(t).sort(SortAsc(el.cellIndex)));
+                                el.setAttribute('title', 'sorted ascending');
+                                moveRows(getTableData(t, el.cellIndex, SortAsc).sort(SortAsc()));
                             }
                             else {
                                 el.className = el.className.replace('sorted-ascending', 'sorted-descending');
                                 el.querySelector('img').src = 'img/arrowUp.png';
-                                el.querySelector('img').setAttribute('title', 'descending');
-                                setTableData(t, getTableData(t).sort(SortDesc(el.cellIndex)));
+                                el.setAttribute('title', 'sorted descending');
+                                moveRows(getTableData(t, el.cellIndex, SortDesc).sort(SortDesc()));
                             }
                         }
                         else {
                             if (desc !== null) {
-                                if (desc != el) {
+                                if (desc !== el) {
                                     desc.querySelector('img').src = 'img/arrowInit.png';
-                                    desc.querySelector('img').removeAttribute('title');
-                                    desc.className = desc.className.replace('sorted-descending', '');
-                                    el.className += ' sorted-ascending';
+                                    desc.removeAttribute('title');
+                                    desc.className = desc.className.replace('sorted-descending', '') === '' ? '' : desc.className.replace('sorted-descending', '');
+                                    el.className = el.className === '' ? 'sorted-ascending' : el.className + ' sorted-ascending';
                                     el.querySelector('img').src = 'img/arrowDown.png';
-                                    el.querySelector('img').setAttribute('title', 'ascending');
-                                    setTableData(t, getTableData(t).sort(SortAsc(el.cellIndex)));
+                                    el.setAttribute('title', 'sorted ascending');
+                                    moveRows(getTableData(t, el.cellIndex, SortAsc).sort(SortAsc()));
                                 }
                                 else {
                                     el.className = el.className.replace('sorted-descending', 'sorted-ascending');
                                     el.querySelector('img').src = 'img/arrowDown.png';
-                                    el.querySelector('img').setAttribute('title', 'ascending');
-                                    setTableData(t, getTableData(t).sort(SortAsc(el.cellIndex)));
+                                    el.setAttribute('title', 'sorted ascending');
+                                    moveRows(getTableData(t, el.cellIndex, SortAsc).sort(SortAsc()));
                                 }
                             }
                         }
                     }
                 }
-                function getTableData(t) {
-                    var rows = t.rows;
-                    var span = [],
-                        tableData = [];
-                    for (var i = 1; i < rows.length; i++) {
-                        tableData[i - 1] = [];
-                        for (var j = 0; j < rows[i].cells.length; j++) {
-                            //if (rows[i].cells[j].rowSpan > 1) {
-                            //    span.push({
-                            //        cols: rows[i].cells[j].colSpan,
-                            //        rows: rows[i].cells[j].rowSpan - 1,
-                            //        i: i,
-                            //        j: j,
-                            //        val: rows[i].cells[j]
-                            //    });
-                            //}
-                            tableData[i - 1][j] = rows[i].cells[j];
+                function getTableData(t, index, sort) {
+                    var rows = Array.prototype.slice.call(t.rows),
+                        col = [],
+                        insertInCol = [];
+                    rows.shift();
+                    for (var i = 0; i < rows.length; i++) {
+                        if (rows[i].querySelector('[rowspan]')) {
+                            var spancell = rows[i].querySelector('[rowspan]');
+                            if (spancell.cellIndex === index) {
+                                col.push(spancell);
+                            }
+                            else {
+                                insertInCol[insertInCol.length] = [];
+                                insertInCol[insertInCol.length - 1].push(rows[i].cells[index]);
+                                for (var s = 1; s < spancell.rowSpan; s++) {
+                                    if (spancell.cellIndex < index)
+                                        insertInCol[insertInCol.length - 1][s] = rows[i + s].cells[index - 1];
+                                    else insertInCol[insertInCol.length - 1][s] = rows[i + s].cells[index];
+                                }
+                                insertInCol[insertInCol.length - 1].sort(sort());
+                                moveRows(insertInCol[insertInCol.length - 1], spancell.parentNode);
+                                col.push(insertInCol[insertInCol.length - 1][0]);
+                            }
+                            i += spancell.rowSpan - 1;
                         }
+                        else col.push(rows[i].cells[index]);
                     }
-                    //if (span.length) {
-                    //    for (var x = 0; x < span.length; x++) {
-                    //        for (var r = span[x].rows; r > 0; r--) {
-                    //            tableData[span[x].i].splice(span[x].j, 0, span[x].val);
-                    //            span[x].i += 1;
-                    //        }
-                    //    }
-                    //}
-                    return tableData;
+                    return col;
                 }
-                //function setTableData(t, data) {
-                //    var rows = t.rows;
-                //    for (var i = 1; i < rows.length; i++) {
-                //        for (var j = 0; j < rows[i].cells.length; j++) {
-                //            if (rows[i].cells[j].rowSpan === 1)
-                //                rows[i].cells[j].textContent = data[i - 1][j].textContent
-                //            else {
-                //                rows[i].cells[j].textContent = data[i - 1][j];
-                //                for (var span = 1; span < rows[i].cells[j].rowSpan; span++) {
-                //                    data[i - 1 + span].splice(j, 1);
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
-                //function getTableData(t) {
-                //    var rows = t.rows;
-                //    var tableData = [];
-                //    for (var i = 1; i < rows.length; i++) {
-                //        tableData[i - 1] = [];
-                //        for (var j = 0; j < rows[i].cells.length; j++) {
-                //            tableData[i - 1][j] = rows[i].cells[j].textContent;
-                //        }
-                //    }
-                //    return tableData;
-                //}
-                function setTableData(t, data) {
-                    var rows = t.rows;
-                    for (var i = 1; i < rows.length; i++) {
-                        for (var j = 0; j < rows[i].cells.length; j++) {
-                            rows[i].cells[j] = data[i - 1][j];
-                        }
-                    }
-                }
-                function SortAsc(colNum) {
+
+                function SortAsc() {
                     return function (a, b) {
-                        if (isNumber(a[colNum].textContent) && isNumber(b[colNum].textContent)) {
-                            var a = Number(a[colNum].textContent),
-                                b = Number(b[colNum].textContent);
+                        if (isNumber(a.textContent) && isNumber(b.textContent)) {
+                            var a = Number(a.textContent),
+                                b = Number(b.textContent);
                             return a === b ? 0 : (a < b ? -1 : 1);
                         }
-                        else return a[colNum].textContent.localeCompare(b[colNum].textContent);
+                        else return a.textContent.localeCompare(b.textContent);
                     };
                 }
+
                 function SortDesc(colNum) {
                     return function (a, b) {
-                        if (isNumber(a[colNum].textContent) && isNumber(b[colNum].textContent)) {
-                            var a = Number(a[colNum].textContent),
-                                b = Number(b[colNum].textContent);
+                        if (isNumber(a.textContent) && isNumber(b.textContent)) {
+                            var a = Number(a.textContent),
+                                b = Number(b.textContent);
                             return a === b ? 0 : (b < a ? -1 : 1);
                         }
-                        else return -a[colNum].textContent.localeCompare(b[colNum].textContent);
+                        else return -a.textContent.localeCompare(b.textContent);
                     };
                 }
+
                 function isNumber(value) {
                     if (!isNaN(parseFloat(value)) && isFinite(value))
                         return true;
                     else return false;
                 }
+
+                function moveRows(tdsArr, spanrow) {
+                    var currentRow = 1,
+                        moveAgain = false,
+                        elem = tdsArr[0].offsetParent;
+                    if (spanrow) {
+                        var spanRowIndex = spanrow.rowIndex;
+                        for (var i = 0; i < tdsArr.length; i++) {
+                            var index = tdsArr[i].parentNode.rowIndex,
+                                spancell = spanrow.querySelector('[rowspan]');
+                            if (index !== spanRowIndex + i) {
+                                if (index > spanRowIndex + i)
+                                    spanrow.parentNode.insertBefore(tdsArr[i].parentNode, elem.rows[spanRowIndex + i]);
+                                else spanrow.parentNode.insertBefore(tdsArr[i].parentNode, elem.rows[spanRowIndex + i + 1]);
+                            }
+                        }
+                        if (tdsArr[0].parentNode !== spanrow) {
+                            if (spancell.cellIndex === spanrow.cells.length - 1)
+                                tdsArr[0].parentNode.insertBefore(spancell, tdsArr[0].parentNode.cells[spancell.cellIndex + 1]);
+                            else tdsArr[0].parentNode.insertBefore(spancell, tdsArr[0].parentNode.cells[spancell.cellIndex]);
+                        }
+                    }
+                    else {
+                        for (var i = 0; i < tdsArr.length; i++) {
+                            var index = tdsArr[i].parentNode.rowIndex,
+                                spancell = tdsArr[i].parentNode.querySelector('[rowspan]');
+                            if (index !== currentRow) {
+                                if (currentRow > index) {
+                                    if (spancell) {
+                                        for (var j = 0; j < spancell.rowSpan; j++) {
+                                            elem.rows[i + 1].parentNode.insertBefore(elem.rows[index], elem.rows[currentRow + 1]);
+                                        }
+                                        currentRow += spancell.rowSpan;
+                                    }
+                                    else {
+                                        elem.rows[i + 1].parentNode.insertBefore(elem.rows[index], elem.rows[currentRow + 1]);
+                                        currentRow++;
+                                    }
+                                    moveAgain = true;
+                                }
+                                else {
+                                    if (spancell) {
+                                        for (var j = 0; j < spancell.rowSpan; j++) {
+                                            elem.rows[i + 1].parentNode.insertBefore(elem.rows[index + spancell.rowSpan - 1], elem.rows[currentRow]);
+                                        }
+                                        currentRow += spancell.rowSpan;
+                                    }
+                                    else {
+                                        elem.rows[i + 1].parentNode.insertBefore(elem.rows[index], elem.rows[currentRow]);
+                                        currentRow++;
+                                    }
+                                    moveAgain = true;
+                                }
+                            }
+                            else {
+                                if (spancell && index === currentRow) {
+                                    currentRow += spancell.rowSpan;
+                                }
+                                else {
+                                    if (!spancell && index === currentRow) {
+                                        currentRow++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (moveAgain)
+                        moveRows(tdsArr, spanrow);
+                }
+
                 return {
                     makeSortable: function (element) {
                         Event.add(prepareElem(element), 'click', Sortable);
@@ -208,19 +248,35 @@ var TableTool = {
                     prevParam.y = Table.getBoundingClientRect().top + window.pageYOffset;
                     var tcopy = Table.cloneNode(true);
                     for (var i = 0; i < tcopy.rows.length; i++) {
-                        for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
-                            if (j - 1 != prevParam.index)
-                                tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                        if (tcopy.rows[i].querySelector('[rowspan]') === null) {
+                            for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
+                                if (j - 1 != prevParam.index)
+                                    tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                            }
                         }
+                        //else {
+                        //    var spancell = tcopy.rows[i].querySelector('[rowspan]'),
+                        //        span = spancell.rowSpan;
+                        //    for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
+                        //        if (spancell.cellIndex === prevParam.index) {
+                        //            if (j - 1 != prevParam.index)
+                        //                tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                        //        }
+                        //        if (j - 1 != prevParam.index)
+                        //            tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                        //    }
+                        //    if (span) {
+                        //        if (j - 1 != prevParam.index + 1)
+                        //            tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                        //    }
+                        //}
                     }
-                    //var rows = Table.rows;
-                    //for (var i = 0; i < rows.length; i++) {
-                    //    var tr = document.createElement('tr');
-                    //    tcopy.appendChild(tr);
-                    //    tr.appendChild(rows[i].cells[prevParam.index].cloneNode(true));
-                    //}
                     var getBorderWidth = (function () {
-                        var parentItemComputed, top, rigth, bottom, left;
+                        var parentItemComputed,
+                            top,
+                            rigth,
+                            bottom,
+                            left;
                         parentItemComputed = getComputedStyle(prevParam.parent);
                         top = Number(parentItemComputed.getPropertyValue('border-top-width').replace('px', ''));
                         rigth = Number(parentItemComputed.getPropertyValue('border-right-width').replace('px', ''));
