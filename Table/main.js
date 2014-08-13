@@ -257,36 +257,43 @@ var TableTool = {
                         else {
                             var spancell = tcopy.rows[i].querySelector('[rowspan]'),
                                 span = spancell.rowSpan;
-                            if (spancell.cellIndex === prevParam.index) {
-                                for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
-                                    if (j - 1 != prevParam.index)
-                                        tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
-                                }
-                                for (var r = 1; r < span; r++) {
-                                    for (var j = tcopy.rows[i + r].cells.length; j > 0; j--) {
-                                        while (tcopy.rows[i + r].hasChildNodes() )
-                                            tcopy.rows[i + r].removeChild(tcopy.rows[i + r].firstChild);
+                            switch (true) {
+                                case (spancell.cellIndex === prevParam.index): {
+                                    for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
+                                        if (j - 1 != prevParam.index)
+                                            tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
                                     }
-                                }
-                                i += span - 1;
-                            }
-                            if (spancell.cellIndex < prevParam.index) {
-                                for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
-                                    if (j - 1 != prevParam.index)
-                                        tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
-                                }
-                                for (var r = 1; r < span; r++) {
-                                    for (var j = tcopy.rows[i + r].cells.length; j > 0; j--) {
-                                        if (j != prevParam.index)
-                                            tcopy.rows[i + r].removeChild(tcopy.rows[i + r].cells[j - 1]);
+                                    tcopy.rows[i].style.height = Table.rows[i].getBoundingClientRect().height + 'px';
+                                    for (var r = 1; r < span; r++) {
+                                        for (var j = tcopy.rows[i + r].cells.length; j > 0; j--) {
+                                            while (tcopy.rows[i + r].hasChildNodes())
+                                                tcopy.rows[i + r].removeChild(tcopy.rows[i + r].firstChild);
+                                            tcopy.rows[i + r].style.height = Table.rows[i + r].getBoundingClientRect().height + 'px';
+                                        }
                                     }
+                                    i += span - 1;
+                                    break;
                                 }
-                                i += span - 1;
-                            }
-                            if (spancell.cellIndex > prevParam.index) {
-                                for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
-                                    if (j - 1 != prevParam.index)
-                                        tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                                case (spancell.cellIndex < prevParam.index): {
+                                    for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
+                                        if (j - 1 != prevParam.index)
+                                            tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                                    }
+                                    for (var r = 1; r < span; r++) {
+                                        for (var j = tcopy.rows[i + r].cells.length; j > 0; j--) {
+                                            if (j != prevParam.index)
+                                                tcopy.rows[i + r].removeChild(tcopy.rows[i + r].cells[j - 1]);
+                                        }
+                                    }
+                                    i += span - 1;
+                                    break;
+                                }
+                                case (spancell.cellIndex > prevParam.index): {
+                                    for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
+                                        if (j - 1 != prevParam.index)
+                                            tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                                    }
+                                    break;
                                 }
                             }
                         }
@@ -370,25 +377,73 @@ var TableTool = {
                     if (timeToMove)
                         move(timeToMove);
                     function move(Side) {
-                        if (Side === 'right') {
-                            var rows = Table.rows;
-                            for (var i = 0; i < rows.length; i++) {
-                                var a = rows[i].cells[prevParam.index];
-                                var b = rows[i].cells[prevParam.index + 1];
-                                rows[i].insertBefore(b, a);
+                        switch (Side) {
+                            case 'right': {
+                                var rows = Table.rows;
+                                for (var i = 0; i < rows.length; i++) {
+                                    var spancell = rows[i].querySelector('[rowspan]');
+                                    if (spancell === null || spancell.cellIndex > prevParam.index + 1) {
+                                        var a = rows[i].cells[prevParam.index];
+                                        var b = rows[i].cells[prevParam.index + 1];
+                                        rows[i].insertBefore(b, a);
+                                    }
+                                    else {
+                                        if (spancell.cellIndex === prevParam.index || spancell.cellIndex === prevParam.index + 1) {
+                                            var a = rows[i].cells[prevParam.index];
+                                            var b = rows[i].cells[prevParam.index + 1];
+                                            rows[i].insertBefore(b, a);
+                                            i += spancell.rowSpan - 1;
+                                        }
+                                        if (spancell.cellIndex < prevParam.index) {
+                                            var a = rows[i].cells[prevParam.index];
+                                            var b = rows[i].cells[prevParam.index + 1];
+                                            rows[i].insertBefore(b, a);
+                                            for (var s = 1; s < spancell.rowSpan; s++) {
+                                                var a = rows[i + s].cells[prevParam.index - 1];
+                                                var b = rows[i + s].cells[prevParam.index];
+                                                rows[i + s].insertBefore(b, a);
+                                            }
+                                            i += spancell.rowSpan - 1;
+                                        }
+                                    }
+                                }
+                                prevParam.index++;
+                                prevParam.style = rows[0].cells[prevParam.index].getBoundingClientRect();
+                                break;
                             }
-                            prevParam.index++;
-                            prevParam.style = rows[0].cells[prevParam.index].getBoundingClientRect();
-                        }
-                        if (Side === 'left') {
-                            var rows = Table.rows;
-                            for (var i = 0; i < rows.length; i++) {
-                                var a = rows[i].cells[prevParam.index - 1];
-                                var b = rows[i].cells[prevParam.index];
-                                rows[i].insertBefore(b, a);
+                            case 'left': {
+                                var rows = Table.rows;
+                                for (var i = 0; i < rows.length; i++) {
+                                    var spancell = rows[i].querySelector('[rowspan]');
+                                    if (spancell === null || spancell.cellIndex > prevParam.index) {
+                                        var a = rows[i].cells[prevParam.index - 1];
+                                        var b = rows[i].cells[prevParam.index];
+                                        rows[i].insertBefore(b, a);
+                                    }
+                                    else {
+                                        if (spancell.cellIndex === prevParam.index || spancell.cellIndex === prevParam.index - 1) {
+                                            var a = rows[i].cells[prevParam.index - 1];
+                                            var b = rows[i].cells[prevParam.index];
+                                            rows[i].insertBefore(b, a);
+                                            i += spancell.rowSpan - 1;
+                                        }
+                                        if (spancell.cellIndex < prevParam.index) {
+                                            var a = rows[i].cells[prevParam.index - 1];
+                                            var b = rows[i].cells[prevParam.index];
+                                            rows[i].insertBefore(b, a);
+                                            for (var s = 1; s < spancell.rowSpan; s++) {
+                                                var a = rows[i + s].cells[prevParam.index - 2];
+                                                var b = rows[i + s].cells[prevParam.index - 1];
+                                                rows[i + s].insertBefore(b, a);
+                                            }
+                                            i += spancell.rowSpan - 1;
+                                        }
+                                    }
+                                }
+                                prevParam.index--;
+                                prevParam.style = rows[0].cells[prevParam.index].getBoundingClientRect();
+                                break;
                             }
-                            prevParam.index--;
-                            prevParam.style = rows[0].cells[prevParam.index].getBoundingClientRect();
                         }
                     }
                 }

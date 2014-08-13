@@ -2,7 +2,7 @@
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta charset="utf-8" />
+    <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>table</title>
     <script type="text/javascript" src="main.js"></script>
@@ -33,15 +33,18 @@
             height: 21px;
             border: 1px solid black;
         }
-        #init input {
-            border: none;
-        }
-        #init input[type="text"] {
-            width: 98px;
-        }
-        #init input[type="button"] {
-            width: 50px;
-        }
+
+            #init input {
+                border: none;
+            }
+
+                #init input[type="text"] {
+                    width: 98px;
+                }
+
+                #init input[type="button"] {
+                    width: 50px;
+                }
 
         #bax {
             border-collapse: collapse;
@@ -56,6 +59,23 @@
             #bax td {
                 font-size: 12px;
                 font-family: Calibri;
+                border: 1px solid black;
+            }
+
+        .aaa {
+            margin: 0 auto;
+            border-collapse: collapse;
+            border: 1px solid black;
+            font: 12px/12px "Times New Roman" black;
+            width: 500px;
+        }
+
+            .aaa th {
+                border: 1px solid black;
+                background-color: #ffd800;
+            }
+
+            .aaa td {
                 border: 1px solid black;
             }
     </style>
@@ -398,6 +418,100 @@
         </tbody>
     </table>
     <br />
-    <table id="four"><tr></tr></table>
+    <table class="aaa" id="aa">
+        <thead>
+            <tr>
+                <th><a href="#">Date</a></th>
+                <th><a href="#">Quant.</a></th>
+                <th><a href="#">Text</a></th>
+                <th><a href="#">Last</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2014-01-02</td>
+                <td>25</td>
+                <td>Test 1</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td rowspan="2">2014-02-02</td>
+                <td>30</td>
+                <td>Text 2</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>Text 3</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2014-06-02</td>
+                <td>45</td>
+                <td>Text 4</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2014-01-05</td>
+                <td>10</td>
+                <td>Text 5</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2014-04-02</td>
+                <td>75</td>
+                <td>Text 6</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2014-05-02</td>
+                <td>75</td>
+                <td>Text 7</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2014-10-02</td>
+                <td>80</td>
+                <td>Text 8</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2014-10-12</td>
+                <td>90</td>
+                <td rowspan="5">Text 9</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>2013-04-02</td>
+                <td>250</td>
+                <!--<td>Text 10</td>-->
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>2014-09-02</td>
+                <td>115</td>
+                <!--<td>Text 11</td>-->
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>2014-09-05</td>
+                <td>60</td>
+                <!--<td>Text 12</td>-->
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>2014-09-11</td>
+                <td>20</td>
+                <!--<td>Text 13</td>-->
+                <td>5</td>
+            </tr>
+            <tr>
+                <td>2014-12-12</td>
+                <td>115</td>
+                <td>Text 14</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
