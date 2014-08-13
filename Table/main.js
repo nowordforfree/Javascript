@@ -254,22 +254,42 @@ var TableTool = {
                                     tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
                             }
                         }
-                        //else {
-                        //    var spancell = tcopy.rows[i].querySelector('[rowspan]'),
-                        //        span = spancell.rowSpan;
-                        //    for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
-                        //        if (spancell.cellIndex === prevParam.index) {
-                        //            if (j - 1 != prevParam.index)
-                        //                tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
-                        //        }
-                        //        if (j - 1 != prevParam.index)
-                        //            tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
-                        //    }
-                        //    if (span) {
-                        //        if (j - 1 != prevParam.index + 1)
-                        //            tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
-                        //    }
-                        //}
+                        else {
+                            var spancell = tcopy.rows[i].querySelector('[rowspan]'),
+                                span = spancell.rowSpan;
+                            if (spancell.cellIndex === prevParam.index) {
+                                for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
+                                    if (j - 1 != prevParam.index)
+                                        tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                                }
+                                for (var r = 1; r < span; r++) {
+                                    for (var j = tcopy.rows[i + r].cells.length; j > 0; j--) {
+                                        while (tcopy.rows[i + r].hasChildNodes() )
+                                            tcopy.rows[i + r].removeChild(tcopy.rows[i + r].firstChild);
+                                    }
+                                }
+                                i += span - 1;
+                            }
+                            if (spancell.cellIndex < prevParam.index) {
+                                for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
+                                    if (j - 1 != prevParam.index)
+                                        tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                                }
+                                for (var r = 1; r < span; r++) {
+                                    for (var j = tcopy.rows[i + r].cells.length; j > 0; j--) {
+                                        if (j != prevParam.index)
+                                            tcopy.rows[i + r].removeChild(tcopy.rows[i + r].cells[j - 1]);
+                                    }
+                                }
+                                i += span - 1;
+                            }
+                            if (spancell.cellIndex > prevParam.index) {
+                                for (var j = tcopy.rows[i].cells.length; j > 0; j--) {
+                                    if (j - 1 != prevParam.index)
+                                        tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
+                                }
+                            }
+                        }
                     }
                     var getBorderWidth = (function () {
                         var parentItemComputed,
