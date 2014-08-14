@@ -228,7 +228,7 @@ var TableTool = {
                     if (e.target.nodeName === 'IMG') {
                         prevParam = {
                             parent: e.target.parentNode,
-                            x: e.offsetX === undefined ? e.layerX - e.target.parentNode.offsetLeft : e.offsetX + e.target.offsetLeft,
+                            x: e.offsetX === undefined ? e.layerX - e.target.parentNode.offsetLeft : e.offsetX + e.target.offsetLeft, /* probable solution? e.pageX - e.target.getBoundingClientRect().left */
                             y: null,
                             right: Math.abs(e.pageX - e.target.parentNode.getBoundingClientRect().right),
                             style: e.target.parentNode.getBoundingClientRect(),
