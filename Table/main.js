@@ -228,7 +228,7 @@ var TableTool = {
                     if (e.target.nodeName === 'IMG') {
                         prevParam = {
                             parent: e.target.parentNode,
-                            x: e.offsetX === undefined ? e.clientX - e.target.parentNode.offsetLeft : e.offsetX + e.target.offsetLeft,
+                            x: e.offsetX === undefined ? e.layerX - e.target.parentNode.offsetLeft : e.offsetX + e.target.offsetLeft,
                             y: null,
                             right: Math.abs(e.pageX - e.target.parentNode.getBoundingClientRect().right),
                             style: e.target.parentNode.getBoundingClientRect(),
@@ -237,7 +237,7 @@ var TableTool = {
                     } else {
                         prevParam = {
                             parent: e.target,
-                            x: e.offsetX === undefined ? e.clientX - e.target.offsetLeft : e.offsetX,
+                            x: e.offsetX === undefined ? e.layerX - e.currentTarget.offsetLeft : e.offsetX,
                             y: null,
                             right: Math.abs(e.pageX - e.target.getBoundingClientRect().right),
                             style: e.target.getBoundingClientRect(),
@@ -253,6 +253,8 @@ var TableTool = {
                                 if (j - 1 != prevParam.index)
                                     tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
                             }
+                            if (tcopy.rows[i].textContent.trim() === '')
+                                tcopy.rows[i].style.height = Table.rows[i].getBoundingClientRect().height + 'px';
                         }
                         else {
                             var spancell = tcopy.rows[i].querySelector('[rowspan]'),
@@ -279,11 +281,15 @@ var TableTool = {
                                         if (j - 1 != prevParam.index)
                                             tcopy.rows[i].removeChild(tcopy.rows[i].cells[j - 1]);
                                     }
+                                    if (tcopy.rows[i].textContent.trim() === '')
+                                        tcopy.rows[i].style.height = Table.rows[i].getBoundingClientRect().height + 'px';
                                     for (var r = 1; r < span; r++) {
                                         for (var j = tcopy.rows[i + r].cells.length; j > 0; j--) {
                                             if (j != prevParam.index)
                                                 tcopy.rows[i + r].removeChild(tcopy.rows[i + r].cells[j - 1]);
                                         }
+                                        if (tcopy.rows[i + r].textContent.trim() === '')
+                                            tcopy.rows[i + r].style.height = Table.rows[i + r].getBoundingClientRect().height + 'px';
                                     }
                                     i += span - 1;
                                     break;
@@ -298,6 +304,7 @@ var TableTool = {
                             }
                         }
                     }
+                    DragObj = tcopy;
                     var getBorderWidth = (function () {
                         var parentItemComputed,
                             top,
@@ -311,12 +318,12 @@ var TableTool = {
                         left = Number(parentItemComputed.getPropertyValue('border-left-width').replace('px', ''));
                         return Math.max(top, rigth, bottom, left);
                     }());
-                    DragObj = tcopy;
-                    document.body.appendChild(DragObj);
-                    DragObj.className = DragObj.className === '' ? 'copy' : DragObj.className + ' copy';
                     var parentTableWidth = Number(getComputedStyle(Table).getPropertyValue('width').replace('px', ''));
                     if (getBorderWidth || parentTableWidth > prevParam.style.width)
                         DragObj.style.width = prevParam.style.width + getBorderWidth + 'px';
+                    document.body.appendChild(DragObj);
+                    DragObj.className = DragObj.className === '' ? 'copy' : DragObj.className + ' copy';
+                    DragObj.style.left = prevParam.parent.getBoundingClientRect().left + 'px';
                     DragObj.style.display = 'none';
                     addDocumentEventHandlers();
                 }
@@ -426,6 +433,7 @@ var TableTool = {
                                             var b = rows[i].cells[prevParam.index];
                                             rows[i].insertBefore(b, a);
                                             i += spancell.rowSpan - 1;
+                                            continue;
                                         }
                                         if (spancell.cellIndex < prevParam.index) {
                                             var a = rows[i].cells[prevParam.index - 1];
@@ -437,6 +445,7 @@ var TableTool = {
                                                 rows[i + s].insertBefore(b, a);
                                             }
                                             i += spancell.rowSpan - 1;
+                                            continue;
                                         }
                                     }
                                 }
