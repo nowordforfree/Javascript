@@ -237,7 +237,7 @@ var TableTool = {
                     } else {
                         prevParam = {
                             parent: e.target,
-                            x: e.offsetX === undefined ? e.layerX - e.currentTarget.offsetLeft : e.offsetX,
+                            x: e.offsetX === undefined ? e.pageX - e.target.getBoundingClientRect().left : e.offsetX,
                             y: null,
                             right: Math.abs(e.pageX - e.target.getBoundingClientRect().right),
                             style: e.target.getBoundingClientRect(),
