@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TO DO</title>
+    <script src="https://rawgit.com/nowordforfree/Javascript/first/Table/main.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            TableTool.Init('issues')
+        });
+    </script>
+    <style type="text/css">
+        * {
+            font: 14px/16px "Calibri", "Times New Roman", Verdana;
+        }
+
+        .issues {
+            display: flexbox;
+            max-width: 1000px;
+            width: 95%;
+            border: 1px solid black;
+            border-collapse: collapse;
+            vertical-align: middle;
+        }
+
+            .issues th {
+                border: 1px solid black;
+                background-color: #ffd800;
+                color: white;
+                font-weight: bold;
+            }
+
+            .issues td {
+                border: 1px solid black;
+                padding-left: 5px;
+            }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <table class="issues" id="issues">
+            <thead>
+                <tr>
+                    <th><label>Key</label></th>
+                    <th><label>Description</label></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="https://jira.nixsolutions.com/browse/RADSQA-20470">RADSQA-20470:</a>
+                    </td>
+                    <td>
+                        <span>Implement AddD16.5 from 3rd Parties List definition</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://jira.nixsolutions.com/browse/RADSQA-20477">RADSQA-20477:</a>
+                    </td>
+                    <td>
+                        <span>Implement lookup field "display" value(s) based on localization resources by default</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
