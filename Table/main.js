@@ -22,7 +22,7 @@ var TableTool = {
                 function prepareElem(el) {
                     var img = document.createElement('img');
                     el.appendChild(img);
-                    img.src = 'https://rawgit.com/nowordforfree/Javascript/blob/first/Table/img/arrowInit.png';
+                    img.src = 'img/arrowInit.png';
                     img.style.width = '10px';
                     img.style.height = '10px';
                     img.style.cssFloat = 'right';
@@ -37,24 +37,24 @@ var TableTool = {
                         desc = t.querySelector('.sorted-descending');
                     if (asc === null && desc === null) {
                         el.className = el.className === '' ? 'sorted-ascending' : el.className + ' sorted-ascending';
-                        el.querySelector('img').src = 'https://rawgit.com/nowordforfree/Javascript/blob/first/Table/img/arrowDown.png';
+                        el.querySelector('img').src = 'img/arrowDown.png';
                         el.setAttribute('title', 'sorted ascending');
                         moveRows(getTableData(t, el.cellIndex, SortAsc).sort(SortAsc()));
                     }
                     else {
                         if (asc !== null) {
                             if (asc !== el) {
-                                asc.querySelector('img').src = 'https://rawgit.com/nowordforfree/Javascript/blob/first/Table/img/arrowInit.png';
+                                asc.querySelector('img').src = 'img/arrowInit.png';
                                 asc.removeAttribute('title');
                                 asc.className = asc.className.replace('sorted-ascending', '');
                                 el.className += ' sorted-ascending';
-                                el.querySelector('img').src = 'https://rawgit.com/nowordforfree/Javascript/blob/first/Table/img/arrowDown.png';
+                                el.querySelector('img').src = 'img/arrowDown.png';
                                 el.setAttribute('title', 'sorted ascending');
                                 moveRows(getTableData(t, el.cellIndex, SortAsc).sort(SortAsc()));
                             }
                             else {
                                 el.className = el.className.replace('sorted-ascending', 'sorted-descending');
-                                el.querySelector('img').src = 'https://rawgit.com/nowordforfree/Javascript/blob/first/Table/img/arrowUp.png';
+                                el.querySelector('img').src = 'img/arrowUp.png';
                                 el.setAttribute('title', 'sorted descending');
                                 moveRows(getTableData(t, el.cellIndex, SortDesc).sort(SortDesc()));
                             }
@@ -62,17 +62,17 @@ var TableTool = {
                         else {
                             if (desc !== null) {
                                 if (desc !== el) {
-                                    desc.querySelector('img').src = 'https://rawgit.com/nowordforfree/Javascript/blob/first/Table/img/arrowInit.png';
+                                    desc.querySelector('img').src = 'img/arrowInit.png';
                                     desc.removeAttribute('title');
                                     desc.className = desc.className.replace('sorted-descending', '') === '' ? '' : desc.className.replace('sorted-descending', '');
                                     el.className = el.className === '' ? 'sorted-ascending' : el.className + ' sorted-ascending';
-                                    el.querySelector('img').src = 'https://rawgit.com/nowordforfree/Javascript/blob/first/Table/img/arrowDown.png';
+                                    el.querySelector('img').src = 'img/arrowDown.png';
                                     el.setAttribute('title', 'sorted ascending');
                                     moveRows(getTableData(t, el.cellIndex, SortAsc).sort(SortAsc()));
                                 }
                                 else {
                                     el.className = el.className.replace('sorted-descending', 'sorted-ascending');
-                                    el.querySelector('img').src = 'https://rawgit.com/nowordforfree/Javascript/blob/first/Table/img/arrowDown.png';
+                                    el.querySelector('img').src = 'img/arrowDown.png';
                                     el.setAttribute('title', 'sorted ascending');
                                     moveRows(getTableData(t, el.cellIndex, SortAsc).sort(SortAsc()));
                                 }
