@@ -19,17 +19,18 @@
 					for (var j = 0; j < lHeads.length; j++) {
 						if (lHeads[j] == 'img_height') {
 							var img = $("<img>")
-								.css({
+							img.css({
 									"height": response.listings[i][lHeads[j]] + 'px',
-									"width": response.listings[i][lHeads[++j]] + 'px',
+									"width": response.listings[i][lHeads[j + 2]] + 'px',
 									"float": 'right'
 								})
-								.src = response.listings[i][lHeads[++j]];
+							img.attr("src", response.listings[i][lHeads[j + 1]]);
 							listing.prepend(img);
+							j += 2;
 						}
 						else if (lHeads[j] == 'lister_url') {
 							var linkli = $('<li>');
-							var link = $('<a href=' + response.listings[i][lHeads[j]] + '>link</a>');
+							var link = $("<a class='link' href=" + response.listings[i][lHeads[j]] + ">link</a>");
 							linkli.append(link);
 							listing.append(linkli);
 						}
