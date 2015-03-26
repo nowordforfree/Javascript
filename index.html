@@ -3,70 +3,115 @@
 <head>
 	<title>A little bit of ajax</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript">
 		function ajax () {
-			var xhr = new XMLHttpRequest(),
-				url = 'http://api.nestoria.co.uk/api?country=uk&pretty=1&action=search_listings&encoding=json&listing_type=buy&page=1&place_name='+document.getElementById('request').children[0].value;
-
-			xhr.open('GET', url, true);
-			xhr.send(null);
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState == 4 && xhr.status == 200) {
-					var response = JSON.parse(xhr.responseText);
-					for (var i = 0; i < response.response.listings.length; i++) {
-						var listing = document.createElement('div');
-						var lHeads = Object.getOwnPropertyNames(response.response.listings[i]);
-						for (var j = 0; j < lHeads.length; j++) {
-							if (lHeads[j] == 'img_height') {
-								var img = document.createElement('img');
-								img.style.height = response.response.listings[i][lHeads[j]] + 'px';
-								img.src = response.response.listings[i][lHeads[++j]];
-								img.style.width = response.response.listings[i][lHeads[++j]] + 'px';
-								img.style.float = 'right';
-								listing.insertBefore(img, listing.children[0]);
-							}
-							else {
-								var li = document.createElement('li');
-								listing.appendChild(li);
-								li.innerHTML = lHeads[j] + ': ' + response.response.listings[i][lHeads[j]];
-							}
-						};
-						document.getElementById('response').appendChild(listing);
-					}				
+			$.ajax({
+				url: "http://api.nestoria.co.uk/api?country=uk&pretty=1&action=search_listings&encoding=json&listing_type=buy&page=1&place_name=" + $('#request input:first').val(),
+				type: 'GET',
+				crossDomain: true,
+				dataType: 'jsonp'
+			}).done(function (data) {
+				var response = data.response;
+				for (var i = 0; i < response.listings.length; i++) {
+					var listing = $("<div>");
+					var lHeads = Object.getOwnPropertyNames(response.listings[i]);
+					for (var j = 0; j < lHeads.length; j++) {
+						if (lHeads[j] == 'img_height') {
+							var img = $("<img>")
+								.css({
+									"height": response.listings[i][lHeads[j]] + 'px',
+									"width": response.listings[i][lHeads[++j]] + 'px',
+									"float": 'right'
+								})
+								.src = response.listings[i][lHeads[++j]];
+							listing.prepend(img);
+						}
+						else if (lHeads[j] == 'lister_url') {
+							var linkli = $('<li>');
+							var link = $('<a href=' + response.listings[i][lHeads[j]] + '>link</a>');
+							linkli.append(link);
+							listing.append(linkli);
+						}
+						else {
+							var li = document.createElement('li');
+							listing.append(li);
+							li.innerHTML = lHeads[j] + ': ' + response.listings[i][lHeads[j]];
+						}
+					};
+					$("#response").append(listing);
 				}
-			}
+			})
+			// var xhr = new XMLHttpRequest(),
+			// 	url = 'http://api.nestoria.co.uk/api?country=uk&pretty=1&action=search_listings&encoding=json&listing_type=buy&page=1&place_name='+document.getElementById('request').children[0].value;
+
+			// xhr.open('GET', url, true);
+			// xhr.send(null);
+			// xhr.onreadystatechange = function () {
+			// 	if (xhr.readyState == 4 && xhr.status == 200) {
+			// 		var response = JSON.parse(xhr.responseText);
+			// 		for (var i = 0; i < response.response.listings.length; i++) {
+			// 			var listing = document.createElement('div');
+			// 			var lHeads = Object.getOwnPropertyNames(response.response.listings[i]);
+			// 			for (var j = 0; j < lHeads.length; j++) {
+			// 				if (lHeads[j] == 'img_height') {
+			// 					var img = document.createElement('img');
+			// 					img.style.height = response.response.listings[i][lHeads[j]] + 'px';
+			// 					img.src = response.response.listings[i][lHeads[++j]];
+			// 					img.style.width = response.response.listings[i][lHeads[++j]] + 'px';
+			// 					img.style.float = 'right';
+			// 					listing.insertBefore(img, listing.children[0]);
+			// 				}
+			// 				else if (lHeads[j] == 'lister_url') {
+			// 					var linkli = document.createElement('li');
+			// 					var link = document.createElement('a');
+			// 					link.attributes.add('href', response.response.listings[i][lHeads[j]]);
+			// 					link.text = 'link';
+			// 					linkli.appendChild(link);
+			// 					listings.appendChild(linkli);
+			// 				}
+			// 				else {
+			// 					var li = document.createElement('li');
+			// 					listing.appendChild(li);
+			// 					li.innerHTML = lHeads[j] + ': ' + response.response.listings[i][lHeads[j]];
+			// 				}
+			// 			};
+			// 			document.getElementById('response').appendChild(listing);
+			// 		}				
+			// 	}
+			// }
 		}
 	</script>
 	<style type="text/css">
-	#request {
-		display: inline-block;
-		width: 200px;
-		border: 1px solid black;
-		margin: 10px 0;
-	}
-	#request input {
-		height: 100%;
-		outline: none;
-		border: 0;
-	}
-	#response {
-		border: 1px solid black;
-	}
-	#response div {
-		border: 1px solid black;
-		padding: 5px;
-	}
-	#response li {
-		list-style: none;
-	}
+		#request {
+			display: inline-block;
+			width: 215px;
+			border: 1px solid black;
+			margin: 10px 0;
+		}
+		#request input {
+			height: 100%;
+			outline: none;
+			border: 0;
+		}
+		#response {
+			border: 1px solid black;
+		}
+		#response div {
+			border: 1px solid black;
+			padding: 5px;
+		}
+		#response li {
+			list-style: none;
+		}
 	</style>
 </head>
 <body>
-<div>
-	<div id="request">
-		<input type="text"><input type="button" id="send" value="Send" onclick="ajax()">
+	<div>
+		<div id="request">
+			<input type="text"><input type="button" id="send" value="Send" onclick="ajax()">
+		</div>
+		<div id="response"></div>	
 	</div>
-	<div id="response"></div>	
-</div>
 </body>
 </html>
