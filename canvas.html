@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.js"></script>
+	<style type="text/css">
+		.tooltip {
+			background: #fff;
+			color: #000;
+			padding: 5px 15px;
+			position: relative;
+			font-size: 12px;
+			font-family: Arial, sans-serif;
+		}
+		.tooltip:before {
+			border-left: solid transparent 10px;
+			border-right: solid transparent 10px;
+			border-top: solid #fff 10px;
+			bottom: -10px;
+			content: " ";
+			height: 0;
+			left: 50%;
+			margin-left: -13px;
+			position: absolute;
+			width: 0;
+		}
+	</style>
+</head>
+<body style="background-color: #bcbcbc;">
+	<input id="file" accept="image/jpeg, image/gif, image/x-png" type="file" name="file">
+	<!-- <div style="position: absolute; left: 500px;">
+		<div class="tooltip">
+			<div><b>DROPPED PIN</b></div><hr/>
+			<div style="float:left; width: 50px;">
+				<img src="http://cdn4.iconfinder.com/data/icons/free-large-business-icons/512/Two-storied_house_SH.png">
+				</img>
+			</div>
+			<div style="display:inline-block; padding:0 5px;">
+				<b>4 New York Plaza</b>
+				<p>4 New York Plaza<br/>New York, NY 10004</p>
+			</div>
+		</div>
+	</div> -->
+	<script type="text/javascript">
+			getBase64Image('http://cdn4.iconfinder.com/data/icons/free-large-business-icons/512/Two-storied_house_SH.png', drawCanvas);
+			$('#file').on('change', function (e) {
+				// var canvas = document.createElement('canvas');
+			    // document.body.appendChild(canvas);
+			    // var ctx = canvas.getContext('2d');
+			    var img = new Image;
+			    // img.onload = function() {
+			    // 	ctx.drawImage(img, 0, 0, 355, 205);
+			    // 	document.write(canvas.toDataURL());
+			    // }
+			    // img.src = URL.createObjectURL(this.files[0]);
+			    resizeImage({
+	                width: 800,
+	                height: 600,
+			    	url: URL.createObjectURL(this.files[0])			    	
+			    }, function (imgbase64) {
+			    	img.src = imgbase64;
+				    $('body').append(img);
+			    });
+			})
+
+			function drawCanvas(imgUrl, options) {
+				var canvas = document.createElement('canvas');
+				document.body.appendChild(canvas);
+				canvas.style.position = 'absolute';
+				// canvas.width = 240;
+				var style =
+					'.tooltip {' +
+						'background: #fff;'+
+						'color: #000;'+
+						'padding: 5px 15px;'+
+						'position: relative;'+
+						'font-size: 12px;'+
+						'font-style: normal;'+
+						'font-family: Arial, sans-serif;'+
+						'font-weight: 400;'+
+						'line-height: 1.42857143;'+
+						'text-decoration: none;'+
+						'text-shadow: none;'+
+						'text-transform: none;'+
+						'letter-spacing: normal;'+
+						'word-break: normal;'+
+						'word-spacing: normal;'+
+						'word-wrap: normal;'+
+						'white-space: normal;'+
+					'}'+
+					'.tooltip:before {' +
+						'border-left: solid transparent 10px;'+
+						'border-right: solid transparent 10px;'+
+						'border-top: solid #fff 10px;'+
+						'bottom: -10px;'+
+						'content: " ";'+
+						'height: 0;'+
+						'left: 50%;'+
+						'margin-left: -13px;'+
+						'position: absolute;'+
+						'width: 0;'+
+					'}';
+				var ctx = canvas.getContext("2d");
+				var data = '<svg xmlns="http://www.w3.org/2000/svg" width="250" height="200">' +
+							'<foreignObject width="100%" height="100%" >' +
+							'<style>' + style + '</style>' +
+								'<div xmlns="http://www.w3.org/1999/xhtml" class="tooltip">' +
+									'<div><b>DROPPED PIN</b></div><hr/>' +
+									'<div style="float: left; width: 50px; ">' +
+										'<img src="' + imgUrl + '"></img>' +
+									'</div>' +
+									'<div style="display: inline-block; padding: 0 5px;">' +
+										'<b>' + 'No data available' + '</b>' +
+										'<p>' + '' + '<br/>' + '' + '</p>' +
+									'</div>' +
+								'</div>' +
+							'</foreignObject>' +
+							'</svg>';
+				var img = new Image();
+				img.onload = function() {
+					ctx.drawImage(img, 0, 0);
+				};
+				img.src = 'data:image/svg+xml;base64,' + window.btoa(data);
+			}
+
+			function getBase64Image(url, callback) {
+				var canvas = document.createElement("canvas");
+				var ctx = canvas.getContext("2d");
+				var img = new Image(50, 50);
+				img.setAttribute('crossorigin', 'anonymous');
+				img.onload = function() {
+					ctx.drawImage(img, 0, 0, 50, 50);
+					var dataURL = canvas.toDataURL();
+					if (callback && callback instanceof Function) {
+						callback(dataURL);
+					} else {
+						return dataURL;
+					}
+				};
+				img.src = url;
+			}
+
+			function resizeImage(options, callback) {
+				if (!options.url) {
+					if (callback && callback instanceof Function) {
+						callback();
+					} else {
+						return;
+					}
+				}
+				var image = new Image();
+				image.setAttribute('crossorigin', 'anonymous');
+				var canvas = document.createElement("canvas");
+				var ctx = canvas.getContext("2d");
+				ctx.imageSmoothingEnabled = false;
+				ctx.webkitImageSmoothingEnabled = false;
+				ctx.mozImageSmoothingEnabled = false;
+				image.onload = function() {
+					var scale = 0.7;
+					options.width = options.width || image.width;
+					options.height = options.height || image.height;
+					canvas.width = options.width;
+					canvas.height = options.height;
+					// if (canvas.height > canvas.width) {
+					// 	scale = (Math.round((canvas.height / image.height) * 100) / 100);
+					// } else {
+					// 	scale = (Math.round((canvas.width / image.width) * 100) / 100);
+					// }
+					var scaledImage = downScaleImage(image, scale);
+					ctx.drawImage(scaledImage,
+						canvas.width / 2 - ((image.width * scale) / 2),
+						canvas.height / 2 - ((image.height * scale) / 2)
+						);
+					if (callback && callback instanceof Function) {
+						return callback(canvas.toDataURL());
+					} else {
+						return canvas.toDataURL();
+					}
+				}
+				image.src = options.url;
+
+				function downScaleImage(img, scale) {
+					var imgCV = document.createElement('canvas');
+					imgCV.width = img.width;
+					imgCV.height = img.height;
+					var imgCtx = imgCV.getContext('2d');
+					imgCtx.drawImage(img, 0, 0);
+					return downScaleCanvas(imgCV, scale);
+				}
+
+				function downScaleCanvas(cv, scale) {
+					if (!(scale < 1) || !(scale > 0)) throw ('scale must be a positive number <1 ');
+	      var sqScale = scale * scale; // square scale =  area of a source pixel within target
+	      var sw = cv.width; // source image width
+	      var sh = cv.height; // source image height
+	      var tw = Math.floor(sw * scale); // target image width
+	      var th = Math.floor(sh * scale); // target image height
+	      var sx = 0, sy = 0, sIndex = 0; // source x,y, index within source array
+	      var tx = 0, ty = 0, yIndex = 0, tIndex = 0; // target x,y, x,y index within target array
+	      var tX = 0, tY = 0; // rounded tx, ty
+	      var w = 0, nw = 0, wx = 0, nwx = 0, wy = 0, nwy = 0; // weight / next weight x / y
+	      // weight is weight of current source point within target.
+	      // next weight is weight of current source point within next target's point.
+	      var crossX = false; // does scaled px cross its current px right border ?
+	      var crossY = false; // does scaled px cross its current px bottom border ?
+	      var sBuffer = cv.getContext('2d').
+	      getImageData(0, 0, sw, sh).data; // source buffer 8 bit rgba
+	      var tBuffer = new Float32Array(3 * tw * th); // target buffer Float32 rgb
+	      var sR = 0, sG = 0,  sB = 0; // source's current point r,g,b
+
+	      for (sy = 0; sy < sh; sy++) {
+	        ty = sy * scale; // y src position within target
+	        tY = 0 | ty;     // rounded : target pixel's y
+	        yIndex = 3 * tY * tw;  // line index within target array
+	        crossY = (tY !== (0 | ( ty + scale )));
+	        if (crossY) { // if pixel is crossing botton target pixel
+	          wy = (tY + 1 - ty); // weight of point within target pixel
+	          nwy = (ty + scale - tY - 1); // ... within y+1 target pixel
+	      }
+	      for (sx = 0; sx < sw; sx++, sIndex += 4) {
+	          tx = sx * scale; // x src position within target
+	          tX = 0 |  tx;    // rounded : target pixel's x
+	          tIndex = yIndex + tX * 3; // target pixel index within target array
+	          crossX = (tX !== (0 | (tx + scale)));
+	          if (crossX) { // if pixel is crossing target pixel's right
+	            wx = (tX + 1 - tx); // weight of point within target pixel
+	            nwx = (tx + scale - tX - 1); // ... within x+1 target pixel
+	        }
+	          sR = sBuffer[sIndex    ];   // retrieving r,g,b for curr src px.
+	          sG = sBuffer[sIndex + 1];
+	          sB = sBuffer[sIndex + 2];
+	          if (!crossX && !crossY) { // pixel does not cross
+	            // just add components weighted by squared scale.
+	            tBuffer[tIndex    ] += sR * sqScale;
+	            tBuffer[tIndex + 1] += sG * sqScale;
+	            tBuffer[tIndex + 2] += sB * sqScale;
+	          } else if (crossX && !crossY) { // cross on X only
+	          	w = wx * scale;
+	            // add weighted component for current px
+	            tBuffer[tIndex    ] += sR * w;
+	            tBuffer[tIndex + 1] += sG * w;
+	            tBuffer[tIndex + 2] += sB * w;
+	            // add weighted component for next (tX+1) px
+	            nw = nwx * scale
+	            tBuffer[tIndex + 3] += sR * nw;
+	            tBuffer[tIndex + 4] += sG * nw;
+	            tBuffer[tIndex + 5] += sB * nw;
+	          } else if (!crossX && crossY) { // cross on Y only
+	          	w = wy * scale;
+	            // add weighted component for current px
+	            tBuffer[tIndex    ] += sR * w;
+	            tBuffer[tIndex + 1] += sG * w;
+	            tBuffer[tIndex + 2] += sB * w;
+	            // add weighted component for next (tY+1) px
+	            nw = nwy * scale
+	            tBuffer[tIndex + 3 * tw    ] += sR * nw;
+	            tBuffer[tIndex + 3 * tw + 1] += sG * nw;
+	            tBuffer[tIndex + 3 * tw + 2] += sB * nw;
+	          } else { // crosses both x and y : four target points involved
+	            // add weighted component for current px
+	            w = wx * wy;
+	            tBuffer[tIndex    ] += sR * w;
+	            tBuffer[tIndex + 1] += sG * w;
+	            tBuffer[tIndex + 2] += sB * w;
+	            // for tX + 1; tY px
+	            nw = nwx * wy;
+	            tBuffer[tIndex + 3] += sR * nw;
+	            tBuffer[tIndex + 4] += sG * nw;
+	            tBuffer[tIndex + 5] += sB * nw;
+	            // for tX ; tY + 1 px
+	            nw = wx * nwy;
+	            tBuffer[tIndex + 3 * tw    ] += sR * nw;
+	            tBuffer[tIndex + 3 * tw + 1] += sG * nw;
+	            tBuffer[tIndex + 3 * tw + 2] += sB * nw;
+	            // for tX + 1 ; tY +1 px
+	            nw = nwx * nwy;
+	            tBuffer[tIndex + 3 * tw + 3] += sR * nw;
+	            tBuffer[tIndex + 3 * tw + 4] += sG * nw;
+	            tBuffer[tIndex + 3 * tw + 5] += sB * nw;
+	        }
+	        } // end for sx
+	      } // end for sy
+
+	      // create result canvas
+	      var resCV = document.createElement('canvas');
+	      resCV.width = tw;
+	      resCV.height = th;
+	      var resCtx = resCV.getContext('2d');
+	      var imgRes = resCtx.getImageData(0, 0, tw, th);
+	      var tByteBuffer = imgRes.data;
+	      // convert float32 array into a UInt8Clamped Array
+	      var pxIndex = 0; //
+	      for (sIndex = 0, tIndex = 0; pxIndex < tw * th; sIndex += 3, tIndex += 4, pxIndex++) {
+	      	tByteBuffer[tIndex] = 0 | ( tBuffer[sIndex]);
+	      	tByteBuffer[tIndex + 1] = 0 | (tBuffer[sIndex + 1]);
+	      	tByteBuffer[tIndex + 2] = 0 | (tBuffer[sIndex + 2]);
+	      	tByteBuffer[tIndex + 3] = 255;
+	      }
+	      // writing result to canvas.
+	      resCtx.putImageData(imgRes, 0, 0);
+	      return resCV;
+	  }
+
+	  function log2(v) {
+	      // taken from http://graphics.stanford.edu/~seander/bithacks.html
+	      var b =  [ 0x2, 0xC, 0xF0, 0xFF00, 0xFFFF0000 ];
+	      var S =  [1, 2, 4, 8, 16];
+	      var i=0, r=0;
+
+	      for (i = 4; i >= 0; i--) {
+	      	if (v & b[i])  {
+	      		v >>= S[i];
+	      		r |= S[i];
+	      	}
+	      }
+	      return r;
+	  }
+	}
+	</script>
+</body>
+</html>
